@@ -11,6 +11,7 @@ import HomeDashboard from './components/HomeDashboard';
 import SOSGuide from './components/SOSGuide';
 import CalmToolkit from './components/CalmToolkit';
 import EnvironmentScanner from './components/EnvironmentScanner';
+import VideoAnalysis from './components/VideoAnalysis';
 import type { TabId } from './types';
 
 const tabs: { id: TabId; label: string; icon: string; subtitle: string }[] = [
@@ -129,6 +130,7 @@ export default function App() {
   const [showSOS, setShowSOS] = useState(false);
   const [showCalm, setShowCalm] = useState(false);
   const [showEnvScan, setShowEnvScan] = useState(false);
+  const [showVideoAnalysis, setShowVideoAnalysis] = useState(false);
 
   const stateName = currentState.primaryState.replace('_', ' ');
   const stateDisplay = stateName.charAt(0).toUpperCase() + stateName.slice(1);
@@ -163,6 +165,7 @@ export default function App() {
       {showSOS && <SOSGuide onClose={() => setShowSOS(false)} />}
       {showCalm && <CalmToolkit onClose={() => setShowCalm(false)} />}
       {showEnvScan && <EnvironmentScanner onClose={() => setShowEnvScan(false)} />}
+      {showVideoAnalysis && <VideoAnalysis onClose={() => setShowVideoAnalysis(false)} />}
 
       {/* Top Header Bar */}
       <header className="sticky top-0 z-50 bg-[#0D1B2A]/90 backdrop-blur-lg border-b border-[#1A3A5C] px-4 py-3 flex items-center justify-between lg:px-8">
@@ -193,6 +196,12 @@ export default function App() {
             className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 bg-[#00D9A6]/10 border border-[#00D9A6]/30 text-[#00D9A6] text-[10px] lg:text-xs font-bold rounded-full hover:bg-[#00D9A6]/20 active:scale-95 transition-all"
           >
             🧘 Calm Tools
+          </button>
+          <button
+            onClick={() => setShowVideoAnalysis(true)}
+            className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 bg-[#8B6EE8]/10 border border-[#8B6EE8]/30 text-[#8B6EE8] text-[10px] lg:text-xs font-bold rounded-full hover:bg-[#8B6EE8]/20 active:scale-95 transition-all"
+          >
+            🎬 Record
           </button>
           <button
             onClick={() => setShowEnvScan(true)}
@@ -298,6 +307,9 @@ export default function App() {
             </button>
             <button onClick={() => setShowCalm(true)} className="w-full flex items-center gap-2 px-3 py-2 bg-[#00D9A6]/10 border border-[#00D9A6]/25 text-[#00D9A6] text-sm font-semibold rounded-xl hover:bg-[#00D9A6]/20 active:scale-95 transition-all">
               🧘 Calm Tools
+            </button>
+            <button onClick={() => setShowVideoAnalysis(true)} className="w-full flex items-center gap-2 px-3 py-2 bg-[#8B6EE8]/10 border border-[#8B6EE8]/25 text-[#8B6EE8] text-sm font-semibold rounded-xl hover:bg-[#8B6EE8]/20 active:scale-95 transition-all">
+              🎬 Record & Analyse
             </button>
             <button onClick={() => setShowEnvScan(true)} className="w-full flex items-center gap-2 px-3 py-2 bg-[#38C9F0]/10 border border-[#38C9F0]/25 text-[#38C9F0] text-sm font-semibold rounded-xl hover:bg-[#38C9F0]/20 active:scale-95 transition-all">
               🔍 Scan Room
