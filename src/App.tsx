@@ -12,6 +12,9 @@ import SOSGuide from './components/SOSGuide';
 import CalmToolkit from './components/CalmToolkit';
 import EnvironmentScanner from './components/EnvironmentScanner';
 import VideoAnalysis from './components/VideoAnalysis';
+import ParentToneCoach from './components/ParentToneCoach';
+import SessionTracker from './components/SessionTracker';
+import PricingPage from './components/PricingPage';
 import type { TabId } from './types';
 
 const tabs: { id: TabId; label: string; icon: string; subtitle: string }[] = [
@@ -131,6 +134,7 @@ export default function App() {
   const [showCalm, setShowCalm] = useState(false);
   const [showEnvScan, setShowEnvScan] = useState(false);
   const [showVideoAnalysis, setShowVideoAnalysis] = useState(false);
+  const [showPricing, setShowPricing] = useState(false);
 
   const stateName = currentState.primaryState.replace('_', ' ');
   const stateDisplay = stateName.charAt(0).toUpperCase() + stateName.slice(1);
@@ -139,8 +143,20 @@ export default function App() {
   const renderScreen = () => {
     switch (activeTab) {
       case 'home': return <HomeDashboard onSOS={() => setShowSOS(true)} onCalm={() => setShowCalm(true)} onEnvScan={() => setShowEnvScan(true)} onNavigate={setActiveTab} />;
-      case 'analysis': return <StateMonitor />;
-      case 'guide': return <CaregiverCoPilot />;
+      case 'analysis': return (
+        <div>
+          <div className="px-3 lg:px-5 pt-3"><ParentToneCoach compact /></div>
+          <div className="px-3 lg:px-5 pt-2"><SessionTracker /></div>
+          <StateMonitor />
+        </div>
+      );
+      case 'guide': return (
+        <div>
+          <div className="px-4 pt-3"><ParentToneCoach /></div>
+          <div className="px-4 pt-2"><SessionTracker /></div>
+          <CaregiverCoPilot />
+        </div>
+      );
       case 'log': return <EventLogger />;
       case 'insights': return <DailySummary />;
       case 'leo': return <LeoTab />;
@@ -166,6 +182,7 @@ export default function App() {
       {showCalm && <CalmToolkit onClose={() => setShowCalm(false)} />}
       {showEnvScan && <EnvironmentScanner onClose={() => setShowEnvScan(false)} />}
       {showVideoAnalysis && <VideoAnalysis onClose={() => setShowVideoAnalysis(false)} />}
+      {showPricing && <PricingPage onClose={() => setShowPricing(false)} />}
 
       {/* Top Header Bar */}
       <header className="sticky top-0 z-50 bg-[#0D1B2A]/90 backdrop-blur-lg border-b border-[#1A3A5C] px-4 py-3 flex items-center justify-between lg:px-8">
@@ -313,6 +330,9 @@ export default function App() {
             </button>
             <button onClick={() => setShowEnvScan(true)} className="w-full flex items-center gap-2 px-3 py-2 bg-[#38C9F0]/10 border border-[#38C9F0]/25 text-[#38C9F0] text-sm font-semibold rounded-xl hover:bg-[#38C9F0]/20 active:scale-95 transition-all">
               🔍 Scan Room
+            </button>
+            <button onClick={() => setShowPricing(true)} className="w-full flex items-center gap-2 px-3 py-2 bg-[#8B6EE8]/10 border border-[#8B6EE8]/25 text-[#8B6EE8] text-sm font-semibold rounded-xl hover:bg-[#8B6EE8]/20 active:scale-95 transition-all">
+              💎 Plans & Pricing
             </button>
           </div>
 
