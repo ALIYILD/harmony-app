@@ -6,8 +6,6 @@ import CameraFeed from './CameraFeed';
 import BiometricsPanel from './BiometricsPanel';
 import type { ChildState, Trajectory } from '../types';
 
-/* ---------- helpers ---------- */
-
 const stateToValue: Record<ChildState, number> = {
   calm: 10, engaged: 15, uneasy: 35, confused: 40,
   sensory_seeking: 45, frustrated: 65, overloaded: 80,
@@ -47,12 +45,9 @@ const stateLabelMap: Record<ChildState, string> = {
   sensory_seeking: 'Sensory Seeking',
 };
 
-/* ---------- main component ---------- */
-
 export default function StateMonitor() {
   const { currentState, sensorReadings, stateHistory, childProfile, monitoringActive } = useAppStore();
   const [now, setNow] = useState(new Date());
-  const [activeModality, setActiveModality] = useState<'overview' | 'audio' | 'camera' | 'biometrics'>('overview');
 
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000);
@@ -68,18 +63,11 @@ export default function StateMonitor() {
     .slice(-4)
     .reverse();
 
-  const modalityTabs = [
-    { id: 'overview' as const, label: 'Overview', icon: '📊' },
-    { id: 'audio' as const, label: 'Audio', icon: '🎤' },
-    { id: 'camera' as const, label: 'Camera', icon: '📷' },
-    { id: 'biometrics' as const, label: 'Biometrics', icon: '❤️' },
-  ];
-
   return (
-    <div className="min-h-screen w-full px-4 py-5 flex flex-col gap-4" style={{ backgroundColor: '#060E1C', color: '#C8D4E4' }}>
-      <div className="max-w-5xl mx-auto w-full flex flex-col gap-4">
+    <div className="min-h-screen w-full px-3 lg:px-6 py-4" style={{ backgroundColor: '#060E1C', color: '#C8D4E4' }}>
+      <div className="max-w-[1600px] mx-auto w-full space-y-4">
 
-        {/* ---- Top Section ---- */}
+        {/* ═══ Header ═══ */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <span
@@ -87,41 +75,59 @@ export default function StateMonitor() {
               style={{ animation: monitoringActive ? 'pulse 2s ease-in-out infinite' : 'none' }}
             />
             <h1 className="text-lg font-bold text-white">Monitoring {childProfile.name}</h1>
+            <span className="text-[10px] font-semibold text-[#38C9F0] bg-[#38C9F0]/10 px-2 py-0.5 rounded-full">LIVE</span>
           </div>
-          <span className="text-xs font-medium" style={{ color: '#5A7A9B' }}>
+          <span className="text-xs font-medium text-[#5A7A9B]">
             {now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
           </span>
         </div>
 
-        {/* ---- Desktop: Side-by-side layout / Mobile: stacked ---- */}
-        <div className="flex flex-col lg:flex-row gap-4">
-
-          {/* Left column: Stress Ring + Trajectory + Modality summary */}
-          <div className="flex flex-col gap-4 lg:w-[320px] shrink-0">
-            {/* Stress Ring */}
+        {/* ═══ Top Row: Stress Ring + Quick Stats ═══ */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          {/* Stress Ring + Trajectory */}
+          <div className="lg:col-span-3">
             <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-4 flex flex-col items-center">
-              <StressRing value={ringValue} size={180} state={primaryState} confidence={confidence} confidenceLevel={confidenceLevel} />
+              <StressRing value={ringValue} size={160} state={primaryState} confidence={confidence} confidenceLevel={confidenceLevel} />
+              <div className="flex items-center gap-2 mt-3 w-full justify-center rounded-xl py-2 px-3 bg-[#132D46]">
+                <span className="text-lg font-bold" style={{ color: traj.color }}>{traj.icon}</span>
+                <span className="text-sm font-semibold" style={{ color: traj.color }}>{traj.label}</span>
+              </div>
             </div>
+          </div>
 
-            {/* Trajectory */}
-            <div className="flex items-center justify-center gap-2 rounded-2xl py-3 px-4 border border-[#1A3A5C] bg-[#0D1B2A]">
-              <span className="text-xl font-bold" style={{ color: traj.color }}>{traj.icon}</span>
-              <span className="text-sm font-medium" style={{ color: traj.color }}>{traj.label}</span>
-            </div>
-
-            {/* Modality contribution bars */}
-            <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-4">
-              <h2 className="text-[10px] font-semibold uppercase tracking-wider text-[#5A7A9B] mb-3">Modality Contributions</h2>
-              <div className="space-y-2.5">
+          {/* Quick Stats + Modality Fusion */}
+          <div className="lg:col-span-5">
+            <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-4 h-full">
+              <h2 className="text-[10px] font-semibold uppercase tracking-wider text-[#5A7A9B] mb-3">Live Sensor Readings</h2>
+              <div className="grid grid-cols-3 gap-3 mb-4">
                 {[
-                  { label: 'Audio', value: modalityContributions.audio, color: '#38C9F0' },
-                  { label: 'Vision', value: modalityContributions.vision, color: '#6B7CE8' },
-                  { label: 'Biometric', value: modalityContributions.biometric, color: '#8B6EE8' },
-                  { label: 'Context', value: modalityContributions.context, color: '#00D9A6' },
+                  { label: 'Heart Rate', value: sensorReadings.biometric.heartRate, unit: 'BPM', color: sensorReadings.biometric.heartRate > 110 ? '#FF6B6B' : sensorReadings.biometric.heartRate > 90 ? '#F0C038' : '#00D9A6' },
+                  { label: 'Vocal Intensity', value: sensorReadings.audio.vocalIntensity, unit: 'dB', color: sensorReadings.audio.vocalIntensity > 60 ? '#FF6B6B' : sensorReadings.audio.vocalIntensity > 35 ? '#F0C038' : '#00D9A6' },
+                  { label: 'HRV', value: sensorReadings.biometric.hrv, unit: 'ms', color: sensorReadings.biometric.hrv < 25 ? '#FF6B6B' : sensorReadings.biometric.hrv < 40 ? '#F0C038' : '#00D9A6' },
+                  { label: 'Noise', value: sensorReadings.context.ambientNoise, unit: 'dB', color: sensorReadings.context.ambientNoise > 60 ? '#FF6B6B' : sensorReadings.context.ambientNoise > 40 ? '#F0C038' : '#00D9A6' },
+                  { label: 'Routine', value: Math.round(sensorReadings.context.routineAdherence * 100), unit: '%', color: sensorReadings.context.routineAdherence < 0.5 ? '#FF6B6B' : sensorReadings.context.routineAdherence < 0.7 ? '#F0C038' : '#00D9A6' },
+                  { label: 'Breathing', value: sensorReadings.audio.breathingRate, unit: '/min', color: sensorReadings.audio.breathingRate > 28 ? '#FF6B6B' : sensorReadings.audio.breathingRate > 22 ? '#F0C038' : '#00D9A6' },
+                ].map((s) => (
+                  <div key={s.label} className="text-center">
+                    <p className="text-[9px] text-[#5A7A9B] uppercase tracking-wider font-semibold">{s.label}</p>
+                    <p className="text-xl font-bold transition-colors duration-500" style={{ color: s.color }}>{s.value}</p>
+                    <p className="text-[9px] text-[#5A7A9B]">{s.unit}</p>
+                  </div>
+                ))}
+              </div>
+              {/* Modality Fusion */}
+              <h2 className="text-[10px] font-semibold uppercase tracking-wider text-[#5A7A9B] mb-2">Modality Fusion</h2>
+              <div className="space-y-1.5">
+                {[
+                  { label: 'Audio', value: modalityContributions.audio, color: '#38C9F0', icon: '🎤' },
+                  { label: 'Vision', value: modalityContributions.vision, color: '#6B7CE8', icon: '👁️' },
+                  { label: 'Biometric', value: modalityContributions.biometric, color: '#8B6EE8', icon: '❤️' },
+                  { label: 'Context', value: modalityContributions.context, color: '#00D9A6', icon: '📍' },
                 ].map((m) => (
                   <div key={m.label} className="flex items-center gap-2">
-                    <span className="text-[10px] font-medium text-[#5A7A9B] w-16">{m.label}</span>
-                    <div className="flex-1 h-2 bg-[#132D46] rounded-full overflow-hidden">
+                    <span className="text-xs">{m.icon}</span>
+                    <span className="text-[10px] font-medium text-[#5A7A9B] w-14">{m.label}</span>
+                    <div className="flex-1 h-1.5 bg-[#132D46] rounded-full overflow-hidden">
                       <div className="h-full rounded-full transition-all duration-700" style={{ width: `${m.value * 100}%`, backgroundColor: m.color }} />
                     </div>
                     <span className="text-[10px] font-bold text-white w-8 text-right">{Math.round(m.value * 100)}%</span>
@@ -129,90 +135,63 @@ export default function StateMonitor() {
                 ))}
               </div>
             </div>
+          </div>
 
-            {/* Recent Timeline */}
-            <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-4">
-              <h2 className="text-[10px] font-semibold uppercase tracking-wider text-[#5A7A9B] mb-3">Recent Timeline</h2>
+          {/* Timeline */}
+          <div className="lg:col-span-4">
+            <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-4 h-full">
+              <h2 className="text-[10px] font-semibold uppercase tracking-wider text-[#5A7A9B] mb-3">State Timeline</h2>
               {recentChanges.length === 0 ? (
-                <p className="text-xs text-[#5A7A9B]">No state changes recorded yet. Run the demo to see transitions.</p>
+                <p className="text-xs text-[#5A7A9B]">Run the demo to see live state transitions.</p>
               ) : (
-                <div className="flex flex-col gap-2.5">
+                <div className="flex flex-col gap-3">
                   {recentChanges.map((s, i) => (
-                    <div key={`${s.timestamp}-${i}`} className="flex items-center gap-3">
-                      <span className="w-2 h-2 rounded-full shrink-0" style={{
+                    <div key={`${s.timestamp}-${i}`} className="flex items-center gap-3 bg-[#132D46] rounded-xl p-2.5">
+                      <span className="w-3 h-3 rounded-full shrink-0" style={{
                         backgroundColor:
                           s.primaryState === 'calm' || s.primaryState === 'engaged' ? '#00D9A6'
                           : s.primaryState === 'frustrated' || s.primaryState === 'overloaded' ? '#FF6B6B'
                           : s.primaryState === 'dysregulated' || s.primaryState === 'shutdown_risk' ? '#8B6EE8'
                           : '#F0C038',
                       }} />
-                      <span className="text-xs font-medium text-white flex-1">{stateLabelMap[s.primaryState]}</span>
-                      <span className="text-[10px] text-[#5A7A9B]">{timeAgo(s.timestamp)}</span>
+                      <div className="flex-1 min-w-0">
+                        <span className="text-xs font-semibold text-white block">{stateLabelMap[s.primaryState]}</span>
+                        <span className="text-[10px] text-[#5A7A9B]">{timeAgo(s.timestamp)}</span>
+                      </div>
                     </div>
                   ))}
                 </div>
               )}
+
+              {/* Context snapshot */}
+              <div className="mt-4 pt-3 border-t border-[#1A3A5C]">
+                <h2 className="text-[10px] font-semibold uppercase tracking-wider text-[#5A7A9B] mb-2">Context</h2>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div><span className="text-[#5A7A9B]">Time:</span> <span className="text-white font-medium">{sensorReadings.context.timeOfDay}</span></div>
+                  <div><span className="text-[#5A7A9B]">Day:</span> <span className="text-white font-medium capitalize">{sensorReadings.context.dayType}</span></div>
+                  <div><span className="text-[#5A7A9B]">Since transition:</span> <span className="text-white font-medium">{sensorReadings.context.minutesSinceTransition}m</span></div>
+                  <div><span className="text-[#5A7A9B]">Since meal:</span> <span className="text-white font-medium" style={{ color: sensorReadings.context.minutesSinceMeal > 120 ? '#F0C038' : '#C8D4E4' }}>{sensorReadings.context.minutesSinceMeal}m</span></div>
+                </div>
+              </div>
             </div>
           </div>
+        </div>
 
-          {/* Right column: Modality detail panels */}
-          <div className="flex-1 flex flex-col gap-4 min-w-0">
-            {/* Modality tab switcher */}
-            <div className="flex gap-2 overflow-x-auto pb-1">
-              {modalityTabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveModality(tab.id)}
-                  className={`shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
-                    activeModality === tab.id
-                      ? 'bg-[#38C9F0]/15 text-[#38C9F0] border border-[#38C9F0]/30'
-                      : 'bg-[#0D1B2A] text-[#5A7A9B] border border-[#1A3A5C] hover:text-[#C8D4E4]'
-                  }`}
-                >
-                  <span>{tab.icon}</span>
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+        {/* ═══ Main Panels: Camera | Audio | Biometrics — all visible ═══ */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Camera Feed */}
+          <div>
+            <CameraFeed />
+          </div>
 
-            {/* Active modality panel */}
-            <div className="animate-fade-in" key={activeModality}>
-              {activeModality === 'overview' && (
-                <div className="space-y-4">
-                  <AudioAnalyzer />
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <BiometricsPanel />
-                  </div>
-                </div>
-              )}
-              {activeModality === 'audio' && <AudioAnalyzer />}
-              {activeModality === 'camera' && <CameraFeed />}
-              {activeModality === 'biometrics' && <BiometricsPanel />}
-            </div>
+          {/* Audio Analyzer */}
+          <div>
+            <AudioAnalyzer />
+          </div>
 
-            {/* Quick sensor stats (always visible) */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-              <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-xl p-3 text-center">
-                <p className="text-[10px] text-[#5A7A9B] uppercase tracking-wider">Heart Rate</p>
-                <p className="text-xl font-bold text-white">{sensorReadings.biometric.heartRate}</p>
-                <p className="text-[10px] text-[#5A7A9B]">BPM</p>
-              </div>
-              <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-xl p-3 text-center">
-                <p className="text-[10px] text-[#5A7A9B] uppercase tracking-wider">Vocal Intensity</p>
-                <p className="text-xl font-bold text-white">{sensorReadings.audio.vocalIntensity}</p>
-                <p className="text-[10px] text-[#5A7A9B]">dB</p>
-              </div>
-              <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-xl p-3 text-center">
-                <p className="text-[10px] text-[#5A7A9B] uppercase tracking-wider">Noise Level</p>
-                <p className="text-xl font-bold text-white">{sensorReadings.context.ambientNoise}</p>
-                <p className="text-[10px] text-[#5A7A9B]">dB</p>
-              </div>
-              <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-xl p-3 text-center">
-                <p className="text-[10px] text-[#5A7A9B] uppercase tracking-wider">Routine</p>
-                <p className="text-xl font-bold text-white">{Math.round(sensorReadings.context.routineAdherence * 100)}%</p>
-                <p className="text-[10px] text-[#5A7A9B]">adherence</p>
-              </div>
-            </div>
+          {/* Biometrics + Correlations */}
+          <div>
+            <BiometricsPanel />
           </div>
         </div>
       </div>
