@@ -224,9 +224,9 @@ export default function HarmonyChat() {
       {isOpen && (
         <div
           className="fixed z-[60] flex flex-col
-            inset-x-0 bottom-0 h-[85vh] rounded-t-3xl
+            inset-x-0 bottom-0 h-[85vh] max-h-[85vh] rounded-t-3xl
             lg:inset-auto lg:bottom-8 lg:right-8 lg:w-[400px] lg:h-[600px] lg:rounded-2xl
-            bg-[#0D1B2A] border border-[#1A3A5C] shadow-2xl"
+            bg-[#0D1B2A] border border-[#1A3A5C] shadow-2xl overflow-hidden"
         >
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-[#1A3A5C] flex-shrink-0">
@@ -294,12 +294,12 @@ export default function HarmonyChat() {
 
                 {/* Suggestion pills */}
                 {msg.suggestions && msg.suggestions.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-3 ml-9">
+                  <div className="flex flex-wrap gap-2 mt-3 ml-9 max-w-full">
                     {msg.suggestions.map((suggestion, idx) => (
                       <button
                         key={idx}
                         onClick={() => handleSend(suggestion)}
-                        className="bg-[#132D46] border border-[#1A3A5C] text-[#38C9F0] text-xs rounded-full px-3 py-1.5 hover:bg-[#1A3A5C] hover:border-[#38C9F0]/30 transition-colors whitespace-nowrap"
+                        className="bg-[#132D46] border border-[#1A3A5C] text-[#38C9F0] text-xs rounded-full px-3 py-1.5 hover:bg-[#1A3A5C] hover:border-[#38C9F0]/30 transition-colors whitespace-normal text-left"
                       >
                         {suggestion}
                       </button>
@@ -328,7 +328,7 @@ export default function HarmonyChat() {
           </div>
 
           {/* Input area */}
-          <div className="px-4 py-3 border-t border-[#1A3A5C] flex-shrink-0">
+          <div className="px-4 py-3 pb-4 border-t border-[#1A3A5C] flex-shrink-0">
             <div className="flex items-center gap-2">
               <div className="relative flex-1">
                 <input

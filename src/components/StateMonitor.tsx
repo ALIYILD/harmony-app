@@ -61,7 +61,7 @@ export default function StateMonitor() {
     .slice(-4).reverse();
 
   return (
-    <div className="min-h-screen w-full px-3 lg:px-5 py-4" style={{ backgroundColor: '#060E1C', color: '#C8D4E4' }}>
+    <div className="min-h-screen w-full px-2 sm:px-3 lg:px-5 py-4 overflow-x-hidden" style={{ backgroundColor: '#060E1C', color: '#C8D4E4' }}>
       <div className="max-w-[1600px] mx-auto w-full space-y-3">
 
         {/* ═══ Header ═══ */}
@@ -120,7 +120,7 @@ export default function StateMonitor() {
             </div>
 
             {/* Quick Stats Grid */}
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {[
                 { label: 'HR', value: sensorReadings.biometric.heartRate, unit: 'BPM', color: sensorReadings.biometric.heartRate > 110 ? '#FF6B6B' : sensorReadings.biometric.heartRate > 90 ? '#F0C038' : '#00D9A6' },
                 { label: 'HRV', value: sensorReadings.biometric.hrv, unit: 'ms', color: sensorReadings.biometric.hrv < 25 ? '#FF6B6B' : sensorReadings.biometric.hrv < 40 ? '#F0C038' : '#00D9A6' },

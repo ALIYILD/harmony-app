@@ -195,7 +195,7 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#060E1C] flex flex-col font-glory">
+    <div className="min-h-screen bg-[#060E1C] flex flex-col font-glory overflow-x-hidden">
       {/* Global Toast System */}
       <ToastContainer />
 
@@ -212,21 +212,21 @@ export default function App() {
 
       {/* Top Header Bar */}
       <header className="sticky top-0 z-50 bg-[#0D1B2A]/90 backdrop-blur-lg border-b border-[#1A3A5C] px-4 py-3 flex items-center justify-between lg:px-8">
-        <div className="flex items-center gap-2">
-          <div className="lg:hidden">
+        <div className="flex items-center gap-2 min-w-0 flex-shrink">
+          <div className="lg:hidden shrink-0">
             <LogoSvg />
           </div>
-          <div>
+          <div className="shrink-0">
             <h1 className="text-sm font-bold text-white leading-none lg:text-lg">HarmonyAlert</h1>
             <p className="text-[10px] text-[#5A7A9B] font-semibold tracking-wider uppercase lg:text-xs">Real-time coaching</p>
           </div>
           {/* Mobile: child state badge */}
-          <div className={`lg:hidden ml-2 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${stateInfo.color}`}>
-            <span>Leo: {stateDisplay}</span>
+          <div className={`lg:hidden ml-1 flex items-center gap-1 px-2 py-1 rounded-full text-[10px] sm:text-xs font-semibold whitespace-nowrap ${stateInfo.color}`}>
+            <span className="truncate max-w-[100px] sm:max-w-none">Leo: {stateDisplay}</span>
             <span>{stateInfo.emoji}</span>
           </div>
         </div>
-        <div className="flex items-center gap-2 lg:gap-3">
+        <div className="flex items-center gap-2 lg:gap-3 shrink-0">
           {/* Quick action buttons */}
           <button
             onClick={() => setShowSOS(true)}
@@ -277,7 +277,7 @@ export default function App() {
             🎮 Demo
           </button>
         ) : (
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={run}
               disabled={isSimulating}
@@ -298,14 +298,14 @@ export default function App() {
               ✕
             </button>
             {isSimulating && (
-              <div className="flex-1 flex items-center gap-2">
-                <div className="flex-1 h-1.5 bg-[#132D46] rounded-full overflow-hidden">
+              <div className="w-full flex items-center gap-2">
+                <div className="flex-1 h-1.5 bg-[#132D46] rounded-full overflow-hidden min-w-0">
                   <div
                     className="h-full bg-gradient-to-r from-[#38C9F0] to-[#8B6EE8] rounded-full transition-all duration-1000"
                     style={{ width: `${(simulationPhase / 5) * 100}%` }}
                   />
                 </div>
-                <span className="text-[10px] font-medium text-[#5A7A9B] whitespace-nowrap">
+                <span className="text-[10px] font-medium text-[#5A7A9B] whitespace-nowrap truncate max-w-[180px]">
                   {phaseLabels[simulationPhase]}
                 </span>
               </div>
@@ -413,7 +413,7 @@ export default function App() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto pb-20 lg:pb-4">
+        <main className="flex-1 overflow-y-auto pb-24 lg:pb-4">
           <div className="lg:max-w-6xl lg:mx-auto">
             <div key={activeTab} className="animate-fade-in">
               {renderScreen()}
@@ -423,19 +423,19 @@ export default function App() {
       </div>
 
       {/* Mobile Bottom Tab Bar */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0D1B2A]/95 backdrop-blur-lg border-t border-[#1A3A5C] px-2 py-1 flex justify-around">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0D1B2A]/95 backdrop-blur-lg border-t border-[#1A3A5C] px-1 py-1 flex justify-around safe-area-bottom">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex flex-col items-center justify-center gap-0.5 px-3 min-h-[48px] rounded-xl transition-all ${
+            className={`flex flex-col items-center justify-center gap-0.5 px-1.5 sm:px-3 min-h-[48px] min-w-0 flex-1 rounded-xl transition-all ${
               activeTab === tab.id
                 ? 'text-[#38C9F0] border-t-2 border-[#38C9F0] bg-[#38C9F0]/10'
                 : 'text-[#5A7A9B]'
             }`}
           >
-            <span className="text-xl">{tab.icon}</span>
-            <span className="text-[10px] font-semibold">{tab.label}</span>
+            <span className="text-lg sm:text-xl">{tab.icon}</span>
+            <span className="text-[9px] sm:text-[10px] font-semibold truncate max-w-full">{tab.label}</span>
           </button>
         ))}
       </nav>

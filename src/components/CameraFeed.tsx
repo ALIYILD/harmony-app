@@ -1040,7 +1040,7 @@ export default function CameraFeed() {
     <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl overflow-hidden">
       <div className="flex flex-col lg:flex-row">
         {/* ── Video + Canvas ── */}
-        <div className="relative w-full lg:flex-1 bg-[#060E18]" style={{ aspectRatio: '4/3' }}>
+        <div className="relative w-full lg:flex-1 bg-[#060E18]" style={{ aspectRatio: '4/3', maxHeight: '70vh' }}>
           {permissionDenied ? (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
               <div
@@ -1127,7 +1127,7 @@ export default function CameraFeed() {
         </div>
 
         {/* ── Metrics Panel: compact grid on mobile, side panel on desktop ── */}
-        <div className="lg:w-72 w-full border-t lg:border-t-0 lg:border-l border-[#1A3A5C] p-4">
+        <div className="lg:w-72 w-full border-t lg:border-t-0 lg:border-l border-[#1A3A5C] p-3 sm:p-4">
           {/* Header */}
           <div className="flex items-center gap-2 pb-2 border-b border-[#1A3A5C] mb-3">
             <div

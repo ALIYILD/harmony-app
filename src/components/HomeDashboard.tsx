@@ -134,7 +134,7 @@ function dayFaceLabel(summary: ReturnType<typeof generateMockDailySummary>): str
 
 function Card({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-5 ${className}`}>
+    <div className={`bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-3 sm:p-5 ${className}`}>
       {children}
     </div>
   );
@@ -154,7 +154,7 @@ function QuickActionButton({
   return (
     <button
       onClick={onClick}
-      className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-[#1A3A5C] p-4 min-h-[80px] transition-transform active:scale-95"
+      className="flex flex-col items-center justify-center gap-1.5 sm:gap-2 rounded-2xl border border-[#1A3A5C] p-3 sm:p-4 min-h-[72px] sm:min-h-[80px] transition-transform active:scale-95"
       style={{ backgroundColor: tint }}
     >
       <span className="text-3xl">{icon}</span>
@@ -297,11 +297,11 @@ export default function HomeDashboard({ onSOS, onCalm, onEnvScan, onNavigate }: 
   const highPct = totalDayMins > 0 ? (dailySummary.totalHighRiskMinutes / totalDayMins) * 100 : 0;
 
   return (
-    <div className="min-h-screen pb-24 px-4 pt-6 max-w-4xl mx-auto" style={{ backgroundColor: '#060E1C' }}>
+    <div className="min-h-screen pb-28 px-3 sm:px-4 pt-4 sm:pt-6 max-w-4xl mx-auto overflow-x-hidden" style={{ backgroundColor: '#060E1C' }}>
       {/* ━━━ 1. Greeting + Status Hero ━━━ */}
       <section className="mb-6">
         <div
-          className="rounded-3xl p-6 relative overflow-hidden"
+          className="rounded-3xl p-4 sm:p-6 relative overflow-hidden"
           style={{
             background: `radial-gradient(ellipse at 50% 80%, ${stateColor}18 0%, transparent 70%), #0D1B2A`,
             border: `1px solid ${stateColor}30`,
@@ -347,9 +347,9 @@ export default function HomeDashboard({ onSOS, onCalm, onEnvScan, onNavigate }: 
 
       {/* ━━━ 2. Quick Insight Cards ━━━ */}
       <section className="mb-6">
-        <div className="flex gap-4 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:overflow-visible scrollbar-hide">
+        <div className="flex gap-3 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:overflow-visible scrollbar-hide -mx-3 px-3 sm:-mx-4 sm:px-4 md:mx-0 md:px-0">
           {/* a) How the day is going */}
-          <Card className="min-w-[260px] md:min-w-0 flex-shrink-0">
+          <Card className="min-w-[220px] sm:min-w-[260px] md:min-w-0 flex-shrink-0">
             <p className="text-sm font-medium mb-3" style={{ color: '#5A7A9B' }}>
               How {childName}&apos;s day is going
             </p>
@@ -371,7 +371,7 @@ export default function HomeDashboard({ onSOS, onCalm, onEnvScan, onNavigate }: 
           </Card>
 
           {/* b) Last night's sleep */}
-          <Card className="min-w-[260px] md:min-w-0 flex-shrink-0">
+          <Card className="min-w-[220px] sm:min-w-[260px] md:min-w-0 flex-shrink-0">
             <p className="text-sm font-medium mb-3" style={{ color: '#5A7A9B' }}>
               Last night&apos;s sleep
             </p>
@@ -395,7 +395,7 @@ export default function HomeDashboard({ onSOS, onCalm, onEnvScan, onNavigate }: 
           </Card>
 
           {/* c) Communication today */}
-          <Card className="min-w-[260px] md:min-w-0 flex-shrink-0">
+          <Card className="min-w-[220px] sm:min-w-[260px] md:min-w-0 flex-shrink-0">
             <p className="text-sm font-medium mb-3" style={{ color: '#5A7A9B' }}>
               Communication today
             </p>
@@ -414,7 +414,7 @@ export default function HomeDashboard({ onSOS, onCalm, onEnvScan, onNavigate }: 
           </Card>
 
           {/* d) Environment right now */}
-          <Card className="min-w-[260px] md:min-w-0 flex-shrink-0">
+          <Card className="min-w-[220px] sm:min-w-[260px] md:min-w-0 flex-shrink-0">
             <p className="text-sm font-medium mb-3" style={{ color: '#5A7A9B' }}>
               Environment right now
             </p>

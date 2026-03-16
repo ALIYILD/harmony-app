@@ -157,7 +157,7 @@ export default function AudioAnalyzer() {
   );
 
   return (
-    <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-4 flex flex-col gap-3">
+    <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-3 sm:p-4 flex flex-col gap-3 overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">

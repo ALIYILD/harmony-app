@@ -127,11 +127,11 @@ function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {
 
   return (
     <div
-      className={`rounded-2xl p-4 shadow-sm border border-[#1A3A5C] transition-all ${
+      className={`rounded-2xl p-3 sm:p-4 shadow-sm border border-[#1A3A5C] transition-all ${
         isAvoid ? 'bg-[#FF6B6B]/5 border-[#FF6B6B]/30' : 'bg-[#0D1B2A]'
       }`}
     >
-      <div className="flex items-start gap-3">
+      <div className="flex items-start gap-2 sm:gap-3">
         <span className="text-xl mt-0.5 shrink-0">{suggestion.icon}</span>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap mb-1">
@@ -193,9 +193,9 @@ export default function CaregiverCoPilot() {
     `${childName}'s current state is being monitored. The system is analysing multiple inputs to provide guidance.`;
 
   return (
-    <div className="min-h-screen pb-28 bg-[#060E1C]">
+    <div className="min-h-screen pb-28 bg-[#060E1C] overflow-x-hidden">
       {/* 1. Current State Banner */}
-      <div className={`bg-gradient-to-r ${bannerGradient} px-5 py-4`}>
+      <div className={`bg-gradient-to-r ${bannerGradient} px-3 sm:px-5 py-3 sm:py-4`}>
         <div className="flex items-center justify-between">
           <div>
             <h2 className={`text-base font-bold ${bannerText}`}>
@@ -215,11 +215,11 @@ export default function CaregiverCoPilot() {
         </div>
       </div>
 
-      <div className="px-4 py-4 space-y-4">
+      <div className="px-3 sm:px-4 py-3 sm:py-4 space-y-4">
         {/* 2. Priority Action Card */}
         {prioritySuggestion && (
           <div
-            className={`rounded-2xl p-5 shadow-md bg-[#0D1B2A] border-2 ${
+            className={`rounded-2xl p-4 sm:p-5 shadow-md bg-[#0D1B2A] border-2 ${
               isEscalating ? 'border-[#FF6B6B] animate-pulse-border' : 'border-[#1A3A5C]'
             }`}
           >
@@ -273,7 +273,7 @@ export default function CaregiverCoPilot() {
         </div>
 
         {/* 5. "What's Happening" Explainer */}
-        <div className="rounded-2xl p-5 bg-[#0D1B2A] shadow-sm border border-[#1A3A5C]">
+        <div className="rounded-2xl p-4 sm:p-5 bg-[#0D1B2A] shadow-sm border border-[#1A3A5C]">
           <h3 className="text-xs font-bold text-[#38C9F0] tracking-wider uppercase mb-2">
             What's Happening
           </h3>

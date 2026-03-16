@@ -132,7 +132,7 @@ export default function EventLogger() {
   const currentTime = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 
   return (
-    <div className="min-h-screen pb-28" style={{ backgroundColor: '#060E1C' }}>
+    <div className="min-h-screen pb-28 overflow-x-hidden" style={{ backgroundColor: '#060E1C' }}>
       {/* Toast */}
       {toast && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-2xl shadow-lg text-white font-medium text-sm animate-fade-in bg-[#0D1B2A] border border-[#1A3A5C]"
@@ -141,7 +141,7 @@ export default function EventLogger() {
         </div>
       )}
 
-      <div className="px-4 pt-6 pb-4 max-w-lg mx-auto space-y-5">
+      <div className="px-3 sm:px-4 pt-4 sm:pt-6 pb-4 max-w-lg mx-auto space-y-4 sm:space-y-5">
         {/* Header */}
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold text-white">Log an Event</h1>
@@ -153,7 +153,7 @@ export default function EventLogger() {
         {/* Event Type Grid */}
         <div>
           <p className="text-sm font-semibold text-[#C8D4E4] mb-2">What happened? <span className="text-[#FF6B6B]">*</span></p>
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 gap-2">
             {EVENT_TYPES.map((evt) => {
               const isSelected = selectedType === evt.value;
               return (
@@ -161,14 +161,14 @@ export default function EventLogger() {
                   key={evt.value}
                   type="button"
                   onClick={() => setSelectedType(evt.value)}
-                  className={`flex items-center gap-2.5 p-3 rounded-2xl border-2 transition-all duration-150 text-left ${
+                  className={`flex items-center gap-2 p-2.5 sm:p-3 rounded-2xl border-2 transition-all duration-150 text-left min-h-[48px] ${
                     isSelected
                       ? 'border-[#38C9F0] bg-[#132D46] shadow-md scale-[1.03]'
                       : 'border-[#1A3A5C] bg-[#0D1B2A] hover:bg-[#132D46]'
                   }`}
                 >
-                  <span className="text-2xl">{evt.emoji}</span>
-                  <span className={`text-sm font-medium ${isSelected ? 'text-[#38C9F0]' : 'text-[#C8D4E4]'}`}>
+                  <span className="text-xl sm:text-2xl shrink-0">{evt.emoji}</span>
+                  <span className={`text-xs sm:text-sm font-medium ${isSelected ? 'text-[#38C9F0]' : 'text-[#C8D4E4]'}`}>
                     {evt.label}
                   </span>
                 </button>

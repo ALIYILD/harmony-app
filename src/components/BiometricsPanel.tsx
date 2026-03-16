@@ -54,7 +54,7 @@ function Sparkline({ data, color }: { data: number[]; color: string }) {
   if (data.length < 2) return null;
   const min = Math.min(...data) - 5;
   const max = Math.max(...data) + 5;
-  const w = 120;
+  const w = 100;
   const h = 32;
   const points = data.map((v, i) => {
     const x = (i / (data.length - 1)) * w;
@@ -62,7 +62,7 @@ function Sparkline({ data, color }: { data: number[]; color: string }) {
     return `${x},${y}`;
   });
   return (
-    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="mt-1">
+    <svg width="100%" height={h} viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" className="mt-1">
       <polyline
         points={points.join(' ')}
         fill="none"
@@ -143,9 +143,9 @@ function CorrelationCard({
         boxShadow: glow ? `0 0 12px ${borderColor}44` : 'none',
       }}
     >
-      <div className="flex items-start gap-2">
+      <div className="flex items-start gap-2 min-w-0">
         <span className="text-sm shrink-0">{icon}</span>
-        <p className="text-[11px] leading-relaxed" style={{ color: muted ? '#5A7A9B' : '#C8D8E8' }}>
+        <p className="text-[11px] leading-relaxed break-words min-w-0" style={{ color: muted ? '#5A7A9B' : '#C8D8E8' }}>
           {text}
         </p>
       </div>
@@ -195,7 +195,7 @@ export default function BiometricsPanel() {
 
   return (
     <div
-      className="rounded-2xl p-4 space-y-4"
+      className="rounded-2xl p-3 sm:p-4 space-y-3 sm:space-y-4 overflow-hidden"
       style={{ backgroundColor: '#0D1B2A', border: '1px solid #1A3A5C' }}
     >
       {/* ---- Wearable badge ---- */}
@@ -213,9 +213,9 @@ export default function BiometricsPanel() {
       </div>
 
       {/* ---- HR / HRV row ---- */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-2 sm:gap-3">
         {/* Heart Rate */}
-        <div className="space-y-1">
+        <div className="space-y-1 min-w-0">
           <span className="text-[10px] uppercase tracking-wider" style={{ color: '#5A7A9B' }}>
             Heart Rate
           </span>
@@ -244,7 +244,7 @@ export default function BiometricsPanel() {
         </div>
 
         {/* HRV */}
-        <div className="space-y-1">
+        <div className="space-y-1 min-w-0">
           <span className="text-[10px] uppercase tracking-wider" style={{ color: '#5A7A9B' }}>
             Heart Rate Variability
           </span>

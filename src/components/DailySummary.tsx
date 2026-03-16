@@ -72,7 +72,7 @@ export default function DailySummary() {
 
   return (
     <div className="min-h-screen pb-24" style={{ backgroundColor: '#060E1C' }}>
-      <div className="max-w-lg mx-auto px-4 py-6 space-y-5">
+      <div className="max-w-lg mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-5 overflow-x-hidden">
         {/* ---- Date Header ---- */}
         <div className="text-center">
           <h1 className="text-xl font-bold text-white">Today's Summary</h1>
@@ -83,35 +83,35 @@ export default function DailySummary() {
         </div>
 
         {/* ---- Key Stats Row ---- */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-2 sm:gap-3">
           {/* Calm */}
-          <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-3 text-center">
-            <span className="text-lg">🟢</span>
-            <p className="text-2xl font-bold text-[#00D9A6]">
+          <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-2 sm:p-3 text-center">
+            <span className="text-base sm:text-lg">🟢</span>
+            <p className="text-xl sm:text-2xl font-bold text-[#00D9A6]">
               {summary.totalCalmMinutes}
             </p>
-            <p className="text-xs text-[#5A7A9B]">min calm</p>
+            <p className="text-[10px] sm:text-xs text-[#5A7A9B]">min calm</p>
           </div>
           {/* Elevated */}
-          <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-3 text-center">
-            <span className="text-lg">🟡</span>
-            <p className="text-2xl font-bold text-[#F0C038]">
+          <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-2 sm:p-3 text-center">
+            <span className="text-base sm:text-lg">🟡</span>
+            <p className="text-xl sm:text-2xl font-bold text-[#F0C038]">
               {summary.totalElevatedMinutes}
             </p>
-            <p className="text-xs text-[#5A7A9B]">min elevated</p>
+            <p className="text-[10px] sm:text-xs text-[#5A7A9B]">min elevated</p>
           </div>
           {/* High Risk */}
-          <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-3 text-center">
-            <span className="text-lg">🔴</span>
-            <p className="text-2xl font-bold text-[#FF6B6B]">
+          <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-2 sm:p-3 text-center">
+            <span className="text-base sm:text-lg">🔴</span>
+            <p className="text-xl sm:text-2xl font-bold text-[#FF6B6B]">
               {summary.totalHighRiskMinutes}
             </p>
-            <p className="text-xs text-[#5A7A9B]">min high risk</p>
+            <p className="text-[10px] sm:text-xs text-[#5A7A9B]">min high risk</p>
           </div>
         </div>
 
         {/* ---- State Breakdown Chart ---- */}
-        <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-4">
+        <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-3 sm:p-4">
           <h2 className="text-sm font-semibold text-[#C8D4E4] mb-2">State Breakdown</h2>
           <ResponsiveContainer width="100%" height={200}>
             <PieChart>
@@ -150,10 +150,10 @@ export default function DailySummary() {
         </div>
 
         {/* ---- Today's Timeline Chart ---- */}
-        <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-4">
+        <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-3 sm:p-4">
           <h2 className="text-sm font-semibold text-[#C8D4E4] mb-2">Today's Timeline</h2>
           <ResponsiveContainer width="100%" height={180}>
-            <AreaChart data={hourlyStateData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+            <AreaChart data={hourlyStateData} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
               <defs>
                 <linearGradient id="stressGradient" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#8B6EE8" stopOpacity={0.8} />
@@ -181,10 +181,10 @@ export default function DailySummary() {
         </div>
 
         {/* ---- Weekly Overview Chart ---- */}
-        <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-4">
+        <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-3 sm:p-4">
           <h2 className="text-sm font-semibold text-[#C8D4E4] mb-2">Weekly Overview</h2>
           <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={weeklyStateData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+            <BarChart data={weeklyStateData} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#1A3A5C" />
               <XAxis dataKey="day" tick={{ fontSize: 11, fill: '#5A7A9B' }} stroke="#1A3A5C" />
               <YAxis tick={{ fontSize: 10, fill: '#5A7A9B' }} stroke="#1A3A5C" />
@@ -240,7 +240,7 @@ export default function DailySummary() {
         </div>
 
         {/* ---- Intervention Effectiveness ---- */}
-        <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-5 text-center">
+        <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-3 sm:p-5 text-center">
           <h2 className="text-sm font-semibold text-[#C8D4E4] mb-3">Intervention Effectiveness</h2>
           <div className="relative inline-flex items-center justify-center">
             <svg width="120" height="120" viewBox="0 0 120 120">
@@ -280,7 +280,7 @@ export default function DailySummary() {
         </div>
 
         {/* ---- Pattern Insights ---- */}
-        <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-4">
+        <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-3 sm:p-4">
           <h2 className="text-sm font-semibold text-[#C8D4E4] mb-3">Pattern Insights</h2>
           <div className="space-y-2.5">
             {patternInsights.map((insight, i) => (
