@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import type { StateEstimate, SensorReading, EventLog, ChildProfile, TabId, Suggestion } from '../types';
-import { generateMockChildProfile } from '../data/mockData';
+import type { StateEstimate, SensorReading, EventLog, ChildProfile, TabId, Suggestion, GestureEntry, GestureEvent } from '../types';
+import { generateMockChildProfile, generateDefaultGestures } from '../data/mockData';
 
 interface Toast {
   id: string;
@@ -42,6 +42,13 @@ interface AppState {
   toasts: Toast[];
   addToast: (message: string, type?: 'info' | 'warning' | 'danger' | 'success') => void;
   removeToast: (id: string) => void;
+
+  gestureDictionary: GestureEntry[];
+  gestureEvents: GestureEvent[];
+  addGesture: (gesture: GestureEntry) => void;
+  updateGesture: (id: string, updates: Partial<GestureEntry>) => void;
+  removeGesture: (id: string) => void;
+  addGestureEvent: (event: GestureEvent) => void;
 }
 
 const defaultState: StateEstimate = {
@@ -99,4 +106,15 @@ export const useAppStore = create<AppState>((set) => ({
   removeToast: (id) => set((s) => ({
     toasts: s.toasts.filter(t => t.id !== id)
   })),
+
+  gestureDictionary: generateDefaultGestures(),
+  gestureEvents: [],
+  addGesture: (gesture) => set((s) => ({ gestureDictionary: [...s.gestureDictionary, gesture] })),
+  updateGesture: (id, updates) => set((s) => ({
+    gestureDictionary: s.gestureDictionary.map(g => g.id === id ? { ...g, ...updates } : g)
+  })),
+  removeGesture: (id) => set((s) => ({
+    gestureDictionary: s.gestureDictionary.filter(g => g.id !== id)
+  })),
+  addGestureEvent: (event) => set((s) => ({ gestureEvents: [event, ...s.gestureEvents].slice(0, 50) })),
 }));

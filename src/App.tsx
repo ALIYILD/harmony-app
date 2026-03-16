@@ -6,6 +6,7 @@ import CaregiverCoPilot from './components/CaregiverCoPilot';
 import EventLogger from './components/EventLogger';
 import DailySummary from './components/DailySummary';
 import ChildProfileView from './components/ChildProfileView';
+import GestureDictionary from './components/GestureDictionary';
 import type { TabId } from './types';
 
 const tabs: { id: TabId; label: string; icon: string }[] = [
@@ -14,6 +15,7 @@ const tabs: { id: TabId; label: string; icon: string }[] = [
   { id: 'log', label: 'Log', icon: '\u{1F4DD}' },
   { id: 'summary', label: 'Summary', icon: '\u{1F4CA}' },
   { id: 'profile', label: 'Profile', icon: '\u{1F464}' },
+  { id: 'gestures', label: 'Signs', icon: '\u{1F91F}' },
 ];
 
 const toastConfig = {
@@ -84,6 +86,7 @@ export default function App() {
       case 'log': return <EventLogger />;
       case 'summary': return <DailySummary />;
       case 'profile': return <ChildProfileView />;
+      case 'gestures': return <GestureDictionary />;
     }
   };
 

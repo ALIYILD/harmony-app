@@ -1,4 +1,4 @@
-import type { ChildProfile, Suggestion, EventLog, DailySummary } from '../types';
+import type { ChildProfile, Suggestion, EventLog, DailySummary, GestureEntry } from '../types';
 
 export function generateMockChildProfile(): ChildProfile {
   return {
@@ -207,3 +207,18 @@ export const hourlyStateData = [
   { hour: '7PM', level: 25 },
   { hour: '8PM', level: 15 },
 ];
+
+export function generateDefaultGestures(): GestureEntry[] {
+  return [
+    { id: 'g1', label: 'More', category: 'request', confidence: 0.92, timesConfirmed: 24, source: 'personal', createdAt: Date.now() - 86400000 * 12, lastSeenAt: Date.now() - 3600000, description: 'Taps fingers together — means "more" (food, activity, music)' },
+    { id: 'g2', label: 'Stop / No more', category: 'refusal', confidence: 0.88, timesConfirmed: 18, source: 'personal', createdAt: Date.now() - 86400000 * 10, lastSeenAt: Date.now() - 7200000, description: 'Pushes hands forward, palms out — means "stop" or "no more"' },
+    { id: 'g3', label: 'Help', category: 'request', confidence: 0.85, timesConfirmed: 15, source: 'personal', createdAt: Date.now() - 86400000 * 8, lastSeenAt: Date.now() - 1800000, description: 'Reaches toward caregiver with open hand — requesting help' },
+    { id: 'g4', label: 'Ears hurt / Too loud', category: 'sensory', confidence: 0.78, timesConfirmed: 9, source: 'personal', createdAt: Date.now() - 86400000 * 6, lastSeenAt: Date.now() - 5400000, description: 'Covers ears or presses hands against ears — sound discomfort' },
+    { id: 'g5', label: 'Want food', category: 'need', confidence: 0.82, timesConfirmed: 12, source: 'personal', createdAt: Date.now() - 86400000 * 9, lastSeenAt: Date.now() - 10800000, description: 'Hand to mouth gesture — hungry or wants a specific food' },
+    { id: 'g6', label: 'Finished / All done', category: 'refusal', confidence: 0.75, timesConfirmed: 8, source: 'personal', createdAt: Date.now() - 86400000 * 5, lastSeenAt: Date.now() - 14400000, description: 'Waves both hands side to side — finished with activity' },
+    { id: 'g7', label: 'Pointing', category: 'request', confidence: 0.95, timesConfirmed: 40, source: 'common', createdAt: Date.now() - 86400000 * 14, lastSeenAt: Date.now() - 600000, description: 'Points at object — wants that item or directing attention' },
+    { id: 'g8', label: 'Upset / Distressed', category: 'emotion', confidence: 0.70, timesConfirmed: 6, source: 'personal', createdAt: Date.now() - 86400000 * 4, lastSeenAt: Date.now() - 21600000, description: 'Hits own legs repeatedly — sign of distress or frustration' },
+    { id: 'g9', label: 'Want to go outside', category: 'request', confidence: 0.65, timesConfirmed: 5, source: 'personal', createdAt: Date.now() - 86400000 * 3, lastSeenAt: Date.now() - 43200000, description: 'Pulls caregiver toward door — wants to go outside' },
+    { id: 'g10', label: 'Hug / Comfort', category: 'social', confidence: 0.90, timesConfirmed: 20, source: 'personal', createdAt: Date.now() - 86400000 * 11, lastSeenAt: Date.now() - 900000, description: 'Arms raised toward caregiver — requesting a hug or comfort' },
+  ];
+}

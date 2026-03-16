@@ -119,4 +119,26 @@ export interface DailySummary {
   interventionSuccess: number;
 }
 
-export type TabId = 'monitor' | 'copilot' | 'log' | 'summary' | 'profile';
+export type TabId = 'monitor' | 'copilot' | 'log' | 'summary' | 'profile' | 'gestures';
+
+export interface GestureEntry {
+  id: string;
+  label: string;
+  category: 'need' | 'emotion' | 'request' | 'refusal' | 'sensory' | 'social' | 'custom';
+  confidence: number;
+  timesConfirmed: number;
+  source: 'personal' | 'common';
+  createdAt: number;
+  lastSeenAt: number;
+  description?: string;
+}
+
+export interface GestureEvent {
+  id: string;
+  timestamp: number;
+  matchedLabel: string | null;
+  matchSource: 'personal' | 'common' | null;
+  confidence: number;
+  wasLabeled: boolean;
+  assignedLabel?: string;
+}
