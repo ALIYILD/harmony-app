@@ -9,15 +9,15 @@ interface StressRingProps {
 }
 
 const stateColorMap: Record<ChildState, string> = {
-  calm: '#10B981',
-  engaged: '#10B981',
-  uneasy: '#F59E0B',
-  confused: '#F59E0B',
-  sensory_seeking: '#F59E0B',
-  frustrated: '#EF4444',
-  overloaded: '#EF4444',
-  dysregulated: '#8B5CF6',
-  shutdown_risk: '#8B5CF6',
+  calm: '#00D9A6',
+  engaged: '#00D9A6',
+  uneasy: '#F0C038',
+  confused: '#F0C038',
+  sensory_seeking: '#F0C038',
+  frustrated: '#FF6B6B',
+  overloaded: '#FF6B6B',
+  dysregulated: '#8B6EE8',
+  shutdown_risk: '#8B6EE8',
 };
 
 const stateLabelMap: Record<ChildState, string> = {
@@ -63,7 +63,7 @@ export default function StressRing({
             cy={center}
             r={radius}
             fill="none"
-            stroke="#E2E8F0"
+            stroke="rgba(56, 201, 240, 0.1)"
             strokeWidth={strokeWidth}
           />
           {/* Colored arc */}
@@ -86,7 +86,7 @@ export default function StressRing({
         {/* Center value */}
         <div
           className="absolute inset-0 flex items-center justify-center"
-          style={{ color }}
+          style={{ color: '#FFFFFF' }}
         >
           <span
             className="font-bold leading-none"
@@ -103,14 +103,14 @@ export default function StressRing({
       {/* State label */}
       <p
         className="text-base font-semibold text-center leading-tight"
-        style={{ color, transition: 'color 0.5s ease' }}
+        style={{ color: '#C8D4E4', transition: 'color 0.5s ease' }}
       >
         {label}
       </p>
 
       {/* Confidence */}
       {confidence !== undefined && confidenceLevel && (
-        <p className="text-xs text-center" style={{ color: '#B2BEC3' }}>
+        <p className="text-xs text-center" style={{ color: '#5A7A9B' }}>
           Confidence: {confidenceLevel.charAt(0).toUpperCase() + confidenceLevel.slice(1)} (
           {Math.round(confidence * 100)}%)
         </p>

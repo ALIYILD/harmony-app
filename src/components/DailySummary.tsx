@@ -17,15 +17,15 @@ import {
 import { generateMockDailySummary, weeklyStateData, hourlyStateData } from '../data/mockData';
 
 const STATE_COLORS: Record<string, string> = {
-  calm: '#00B894',
-  engaged: '#6C5CE7',
-  uneasy: '#FDCB6E',
-  confused: '#74b9ff',
-  frustrated: '#F59E0B',
+  calm: '#00D9A6',
+  engaged: '#8B6EE8',
+  uneasy: '#F0C038',
+  confused: '#38C9F0',
+  frustrated: '#F0C038',
   overloaded: '#FF6B6B',
-  dysregulated: '#EF4444',
-  shutdown_risk: '#d63031',
-  sensory_seeking: '#a29bfe',
+  dysregulated: '#FF6B6B',
+  shutdown_risk: '#FF6B6B',
+  sensory_seeking: '#8B6EE8',
 };
 
 const STATE_LABELS: Record<string, string> = {
@@ -47,6 +47,14 @@ const patternInsights = [
   { icon: '☀️', text: 'Calm periods longest on weekends (avg +45 min)' },
 ];
 
+const darkTooltipStyle = {
+  backgroundColor: '#0D1B2A',
+  border: '1px solid #1A3A5C',
+  borderRadius: '12px',
+  fontSize: '12px',
+  color: '#fff',
+};
+
 export default function DailySummary() {
   const summary = useMemo(() => generateMockDailySummary(), []);
 
@@ -57,19 +65,19 @@ export default function DailySummary() {
         .map(([key, value]) => ({
           name: STATE_LABELS[key] || key,
           value,
-          color: STATE_COLORS[key] || '#ccc',
+          color: STATE_COLORS[key] || '#5A7A9B',
         })),
     [summary]
   );
 
   return (
-    <div className="min-h-screen pb-24" style={{ backgroundColor: '#F8F7FF' }}>
+    <div className="min-h-screen pb-24" style={{ backgroundColor: '#060E1C' }}>
       <div className="max-w-lg mx-auto px-4 py-6 space-y-5">
         {/* ---- Date Header ---- */}
         <div className="text-center">
-          <h1 className="text-xl font-bold text-gray-900">Today's Summary</h1>
-          <p className="text-sm text-gray-500 mt-0.5">{summary.date}</p>
-          <p className="text-sm font-medium mt-1" style={{ color: '#6C5CE7' }}>
+          <h1 className="text-xl font-bold text-white">Today's Summary</h1>
+          <p className="text-sm text-[#5A7A9B] mt-0.5">{summary.date}</p>
+          <p className="text-sm font-medium mt-1 bg-clip-text text-transparent" style={{ backgroundImage: 'linear-gradient(to right, #38C9F0, #8B6EE8)', WebkitBackgroundClip: 'text' }}>
             {summary.overallMood}
           </p>
         </div>
@@ -77,34 +85,34 @@ export default function DailySummary() {
         {/* ---- Key Stats Row ---- */}
         <div className="grid grid-cols-3 gap-3">
           {/* Calm */}
-          <div className="bg-white rounded-2xl p-3 text-center shadow-sm">
+          <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-3 text-center">
             <span className="text-lg">🟢</span>
-            <p className="text-2xl font-bold" style={{ color: '#00B894' }}>
+            <p className="text-2xl font-bold text-[#00D9A6]">
               {summary.totalCalmMinutes}
             </p>
-            <p className="text-xs text-gray-500">min calm</p>
+            <p className="text-xs text-[#5A7A9B]">min calm</p>
           </div>
           {/* Elevated */}
-          <div className="bg-white rounded-2xl p-3 text-center shadow-sm">
+          <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-3 text-center">
             <span className="text-lg">🟡</span>
-            <p className="text-2xl font-bold" style={{ color: '#F59E0B' }}>
+            <p className="text-2xl font-bold text-[#F0C038]">
               {summary.totalElevatedMinutes}
             </p>
-            <p className="text-xs text-gray-500">min elevated</p>
+            <p className="text-xs text-[#5A7A9B]">min elevated</p>
           </div>
           {/* High Risk */}
-          <div className="bg-white rounded-2xl p-3 text-center shadow-sm">
+          <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-3 text-center">
             <span className="text-lg">🔴</span>
-            <p className="text-2xl font-bold" style={{ color: '#EF4444' }}>
+            <p className="text-2xl font-bold text-[#FF6B6B]">
               {summary.totalHighRiskMinutes}
             </p>
-            <p className="text-xs text-gray-500">min high risk</p>
+            <p className="text-xs text-[#5A7A9B]">min high risk</p>
           </div>
         </div>
 
         {/* ---- State Breakdown Chart ---- */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
-          <h2 className="text-sm font-semibold text-gray-700 mb-2">State Breakdown</h2>
+        <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-4">
+          <h2 className="text-sm font-semibold text-[#C8D4E4] mb-2">State Breakdown</h2>
           <ResponsiveContainer width="100%" height={200}>
             <PieChart>
               <Pie
@@ -122,7 +130,8 @@ export default function DailySummary() {
               </Pie>
               <Tooltip
                 formatter={(value: unknown, name: unknown) => [`${value}%`, String(name)]}
-                contentStyle={{ borderRadius: '12px', fontSize: '12px' }}
+                contentStyle={darkTooltipStyle}
+                itemStyle={{ color: '#C8D4E4' }}
               />
             </PieChart>
           </ResponsiveContainer>
@@ -134,35 +143,36 @@ export default function DailySummary() {
                   className="inline-block w-2.5 h-2.5 rounded-full"
                   style={{ backgroundColor: entry.color }}
                 />
-                <span className="text-xs text-gray-600">{entry.name}</span>
+                <span className="text-xs text-[#C8D4E4]">{entry.name}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* ---- Today's Timeline Chart ---- */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
-          <h2 className="text-sm font-semibold text-gray-700 mb-2">Today's Timeline</h2>
+        <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-4">
+          <h2 className="text-sm font-semibold text-[#C8D4E4] mb-2">Today's Timeline</h2>
           <ResponsiveContainer width="100%" height={180}>
             <AreaChart data={hourlyStateData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="stressGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#EF4444" stopOpacity={0.8} />
-                  <stop offset="50%" stopColor="#F59E0B" stopOpacity={0.4} />
-                  <stop offset="100%" stopColor="#00B894" stopOpacity={0.2} />
+                  <stop offset="0%" stopColor="#8B6EE8" stopOpacity={0.8} />
+                  <stop offset="50%" stopColor="#38C9F0" stopOpacity={0.4} />
+                  <stop offset="100%" stopColor="#38C9F0" stopOpacity={0.05} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="hour" tick={{ fontSize: 10 }} />
-              <YAxis tick={{ fontSize: 10 }} domain={[0, 100]} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#1A3A5C" />
+              <XAxis dataKey="hour" tick={{ fontSize: 10, fill: '#5A7A9B' }} stroke="#1A3A5C" />
+              <YAxis tick={{ fontSize: 10, fill: '#5A7A9B' }} domain={[0, 100]} stroke="#1A3A5C" />
               <Tooltip
-                contentStyle={{ borderRadius: '12px', fontSize: '12px' }}
+                contentStyle={darkTooltipStyle}
+                itemStyle={{ color: '#C8D4E4' }}
                 formatter={(value: unknown) => [`${value}`, 'Stress Level']}
               />
               <Area
                 type="monotone"
                 dataKey="level"
-                stroke="#6C5CE7"
+                stroke="#38C9F0"
                 strokeWidth={2}
                 fill="url(#stressGradient)"
               />
@@ -171,16 +181,16 @@ export default function DailySummary() {
         </div>
 
         {/* ---- Weekly Overview Chart ---- */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
-          <h2 className="text-sm font-semibold text-gray-700 mb-2">Weekly Overview</h2>
+        <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-4">
+          <h2 className="text-sm font-semibold text-[#C8D4E4] mb-2">Weekly Overview</h2>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={weeklyStateData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="day" tick={{ fontSize: 11 }} />
-              <YAxis tick={{ fontSize: 10 }} />
-              <Tooltip contentStyle={{ borderRadius: '12px', fontSize: '12px' }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#1A3A5C" />
+              <XAxis dataKey="day" tick={{ fontSize: 11, fill: '#5A7A9B' }} stroke="#1A3A5C" />
+              <YAxis tick={{ fontSize: 10, fill: '#5A7A9B' }} stroke="#1A3A5C" />
+              <Tooltip contentStyle={darkTooltipStyle} itemStyle={{ color: '#C8D4E4' }} />
               <Legend
-                wrapperStyle={{ fontSize: '11px' }}
+                wrapperStyle={{ fontSize: '11px', color: '#C8D4E4' }}
                 formatter={(value) => {
                   const labels: Record<string, string> = {
                     calm: 'Calm',
@@ -190,22 +200,22 @@ export default function DailySummary() {
                   return labels[value] || value;
                 }}
               />
-              <Bar dataKey="calm" stackId="a" fill="#00B894" radius={[0, 0, 0, 0]} />
-              <Bar dataKey="elevated" stackId="a" fill="#F59E0B" />
-              <Bar dataKey="highRisk" stackId="a" fill="#EF4444" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="calm" stackId="a" fill="#00D9A6" radius={[0, 0, 0, 0]} />
+              <Bar dataKey="elevated" stackId="a" fill="#F0C038" />
+              <Bar dataKey="highRisk" stackId="a" fill="#FF6B6B" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
         {/* ---- Highlights Card ---- */}
         <div
-          className="bg-white rounded-2xl p-4 shadow-sm"
-          style={{ borderLeft: '4px solid #10B981' }}
+          className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-4"
+          style={{ borderLeft: '4px solid #38C9F0' }}
         >
-          <h2 className="text-sm font-semibold text-gray-700 mb-2">Highlights</h2>
+          <h2 className="text-sm font-semibold text-[#C8D4E4] mb-2">Highlights</h2>
           <ul className="space-y-2">
             {summary.highlights.map((h, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+              <li key={i} className="flex items-start gap-2 text-sm text-[#C8D4E4]">
                 <span className="shrink-0 mt-0.5">&#11088;</span>
                 <span>{h}</span>
               </li>
@@ -215,13 +225,13 @@ export default function DailySummary() {
 
         {/* ---- Concerns Card ---- */}
         <div
-          className="bg-white rounded-2xl p-4 shadow-sm"
-          style={{ borderLeft: '4px solid #F59E0B' }}
+          className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-4"
+          style={{ borderLeft: '4px solid #F0C038' }}
         >
-          <h2 className="text-sm font-semibold text-gray-700 mb-2">Concerns</h2>
+          <h2 className="text-sm font-semibold text-[#C8D4E4] mb-2">Concerns</h2>
           <ul className="space-y-2">
             {summary.concerns.map((c, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+              <li key={i} className="flex items-start gap-2 text-sm text-[#C8D4E4]">
                 <span className="shrink-0 mt-0.5">&#9888;&#65039;</span>
                 <span>{c}</span>
               </li>
@@ -230,8 +240,8 @@ export default function DailySummary() {
         </div>
 
         {/* ---- Intervention Effectiveness ---- */}
-        <div className="bg-white rounded-2xl p-5 shadow-sm text-center">
-          <h2 className="text-sm font-semibold text-gray-700 mb-3">Intervention Effectiveness</h2>
+        <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-5 text-center">
+          <h2 className="text-sm font-semibold text-[#C8D4E4] mb-3">Intervention Effectiveness</h2>
           <div className="relative inline-flex items-center justify-center">
             <svg width="120" height="120" viewBox="0 0 120 120">
               {/* Background circle */}
@@ -240,44 +250,46 @@ export default function DailySummary() {
                 cy="60"
                 r="50"
                 fill="none"
-                stroke="#e5e7eb"
+                stroke="#1A3A5C"
                 strokeWidth="10"
               />
               {/* Progress circle */}
+              <defs>
+                <linearGradient id="circleGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#38C9F0" />
+                  <stop offset="100%" stopColor="#8B6EE8" />
+                </linearGradient>
+              </defs>
               <circle
                 cx="60"
                 cy="60"
                 r="50"
                 fill="none"
-                stroke="#6C5CE7"
+                stroke="url(#circleGradient)"
                 strokeWidth="10"
                 strokeLinecap="round"
                 strokeDasharray={`${(summary.interventionSuccess / 100) * 314.16} 314.16`}
                 transform="rotate(-90 60 60)"
               />
             </svg>
-            <span
-              className="absolute text-3xl font-bold"
-              style={{ color: '#6C5CE7' }}
-            >
+            <span className="absolute text-3xl font-bold text-[#38C9F0]">
               {summary.interventionSuccess}%
             </span>
           </div>
-          <p className="text-sm text-gray-500 mt-2">of logged interventions helped</p>
+          <p className="text-sm text-[#5A7A9B] mt-2">of logged interventions helped</p>
         </div>
 
         {/* ---- Pattern Insights ---- */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
-          <h2 className="text-sm font-semibold text-gray-700 mb-3">Pattern Insights</h2>
+        <div className="bg-[#0D1B2A] border border-[#1A3A5C] rounded-2xl p-4">
+          <h2 className="text-sm font-semibold text-[#C8D4E4] mb-3">Pattern Insights</h2>
           <div className="space-y-2.5">
             {patternInsights.map((insight, i) => (
               <div
                 key={i}
-                className="flex items-start gap-2.5 rounded-xl p-3"
-                style={{ backgroundColor: '#F8F7FF' }}
+                className="flex items-start gap-2.5 rounded-xl p-3 bg-[#132D46]"
               >
                 <span className="text-lg shrink-0">{insight.icon}</span>
-                <p className="text-sm text-gray-700">{insight.text}</p>
+                <p className="text-sm text-[#C8D4E4]">{insight.text}</p>
               </div>
             ))}
           </div>

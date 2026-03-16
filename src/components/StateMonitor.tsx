@@ -18,20 +18,20 @@ const stateToValue: Record<ChildState, number> = {
 };
 
 const dotColorClass: Record<string, string> = {
-  calm: 'bg-[#00B894]',
-  engaged: 'bg-[#00B894]',
-  uneasy: 'bg-[#FDCB6E]',
-  confused: 'bg-[#FDCB6E]',
-  sensory_seeking: 'bg-[#FDCB6E]',
+  calm: 'bg-[#38C9F0]',
+  engaged: 'bg-[#38C9F0]',
+  uneasy: 'bg-[#F0C038]',
+  confused: 'bg-[#F0C038]',
+  sensory_seeking: 'bg-[#F0C038]',
   frustrated: 'bg-[#FF6B6B]',
   overloaded: 'bg-[#FF6B6B]',
-  dysregulated: 'bg-[#FF6B6B]',
-  shutdown_risk: 'bg-[#FF6B6B]',
+  dysregulated: 'bg-[#8B6EE8]',
+  shutdown_risk: 'bg-[#8B6EE8]',
 };
 
 function cardBorderColor(val: number): string {
-  if (val < 0.35) return 'border-[#00B894]';
-  if (val < 0.65) return 'border-[#FDCB6E]';
+  if (val < 0.35) return 'border-[#00D9A6]';
+  if (val < 0.65) return 'border-[#F0C038]';
   return 'border-[#FF6B6B]';
 }
 
@@ -40,9 +40,9 @@ function trajectoryDisplay(t: Trajectory): { icon: string; label: string; color:
     case 'escalating':
       return { icon: '\u2191', label: 'Escalating \u2014 watch closely', color: '#FF6B6B' };
     case 'de-escalating':
-      return { icon: '\u2193', label: 'De-escalating', color: '#00B894' };
+      return { icon: '\u2193', label: 'De-escalating', color: '#00D9A6' };
     default:
-      return { icon: '\u2192', label: 'Stable', color: '#FDCB6E' };
+      return { icon: '\u2192', label: 'Stable', color: '#F0C038' };
   }
 }
 
@@ -71,14 +71,17 @@ const stateLabelMap: Record<ChildState, string> = {
 /* ---------- waveform bars ---------- */
 
 function WaveformBars() {
+  const barColors = ['#38C9F0', '#4AC4F0', '#5CBEF0', '#6EB8EE', '#7FB2EC', '#8FACEA', '#9FA6E8', '#8B6EE8'];
   return (
     <div className="flex items-end gap-[3px] h-5">
-      {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+      {barColors.map((color, i) => (
         <span
           key={i}
-          className="w-[3px] rounded-full bg-[#6C5CE7] opacity-70"
+          className="w-[3px] rounded-full"
           style={{
-            animation: `waveBar 1.2s ease-in-out ${i * 0.1}s infinite alternate`,
+            backgroundColor: color,
+            opacity: 0.85,
+            animation: `waveBar 1.2s ease-in-out ${(i + 1) * 0.1}s infinite alternate`,
           }}
         />
       ))}
@@ -151,20 +154,20 @@ export default function StateMonitor() {
   return (
     <div
       className="min-h-screen w-full max-w-[428px] mx-auto px-4 py-5 flex flex-col gap-5"
-      style={{ backgroundColor: '#F8F7FF', color: '#2D3436' }}
+      style={{ backgroundColor: '#060E1C', color: '#C8D4E4' }}
     >
       {/* ---- Top Section ---- */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <span
-            className={`inline-block w-2.5 h-2.5 rounded-full ${dotColorClass[primaryState] || 'bg-[#00B894]'}`}
+            className={`inline-block w-2.5 h-2.5 rounded-full ${dotColorClass[primaryState] || 'bg-[#38C9F0]'}`}
             style={{ animation: monitoringActive ? 'pulse 2s ease-in-out infinite' : 'none' }}
           />
-          <h1 className="text-lg font-bold">Monitoring {childProfile.name}</h1>
+          <h1 className="text-lg font-bold text-white">Monitoring {childProfile.name}</h1>
         </div>
         <div className="flex items-center gap-3">
           <WaveformBars />
-          <span className="text-xs font-medium" style={{ color: '#B2BEC3' }}>
+          <span className="text-xs font-medium" style={{ color: '#5A7A9B' }}>
             {now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
           </span>
         </div>
@@ -183,8 +186,8 @@ export default function StateMonitor() {
 
       {/* ---- Trajectory ---- */}
       <div
-        className="flex items-center justify-center gap-2 rounded-2xl py-3 px-4"
-        style={{ backgroundColor: 'white', boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}
+        className="flex items-center justify-center gap-2 rounded-2xl py-3 px-4 border border-[#1A3A5C]"
+        style={{ backgroundColor: '#0D1B2A' }}
       >
         <span className="text-xl font-bold" style={{ color: traj.color }}>
           {traj.icon}
@@ -199,17 +202,17 @@ export default function StateMonitor() {
         {modalities.map((m) => (
           <div
             key={m.label}
-            className={`rounded-2xl border-l-4 p-3 ${cardBorderColor(m.intensity)}`}
-            style={{ backgroundColor: 'white', boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}
+            className={`rounded-2xl border-l-4 border border-[#1A3A5C] p-3 ${cardBorderColor(m.intensity)}`}
+            style={{ backgroundColor: '#0D1B2A' }}
           >
             <div className="flex items-center gap-1.5 mb-1">
               <span className="text-base">{m.icon}</span>
-              <span className="text-xs font-semibold">{m.label}</span>
+              <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#5A7A9B' }}>{m.label}</span>
             </div>
-            <p className="text-xs font-medium" style={{ color: '#2D3436' }}>
+            <p className="text-xs font-medium text-white">
               {m.metric}
             </p>
-            <p className="text-[10px] mt-1" style={{ color: '#B2BEC3' }}>
+            <p className="text-[10px] mt-1" style={{ color: '#5A7A9B' }}>
               Contribution: {Math.round(m.contribution * 100)}%
             </p>
           </div>
@@ -218,12 +221,12 @@ export default function StateMonitor() {
 
       {/* ---- Recent Timeline ---- */}
       <div
-        className="rounded-2xl p-4"
-        style={{ backgroundColor: 'white', boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}
+        className="rounded-2xl p-4 border border-[#1A3A5C]"
+        style={{ backgroundColor: '#0D1B2A' }}
       >
-        <h2 className="text-sm font-bold mb-3">Recent Timeline</h2>
+        <h2 className="text-sm font-bold mb-3 uppercase tracking-wider" style={{ color: '#5A7A9B' }}>Recent Timeline</h2>
         {recentChanges.length === 0 ? (
-          <p className="text-xs" style={{ color: '#B2BEC3' }}>
+          <p className="text-xs" style={{ color: '#5A7A9B' }}>
             No state changes recorded yet.
           </p>
         ) : (
@@ -235,19 +238,18 @@ export default function StateMonitor() {
                   style={{
                     backgroundColor:
                       s.primaryState === 'calm' || s.primaryState === 'engaged'
-                        ? '#00B894'
-                        : s.primaryState === 'frustrated' ||
-                            s.primaryState === 'overloaded' ||
-                            s.primaryState === 'dysregulated' ||
-                            s.primaryState === 'shutdown_risk'
+                        ? '#00D9A6'
+                        : s.primaryState === 'frustrated' || s.primaryState === 'overloaded'
                           ? '#FF6B6B'
-                          : '#FDCB6E',
+                          : s.primaryState === 'dysregulated' || s.primaryState === 'shutdown_risk'
+                            ? '#8B6EE8'
+                            : '#F0C038',
                   }}
                 />
                 <div className="flex-1 min-w-0">
-                  <span className="text-xs font-medium">{stateLabelMap[s.primaryState]}</span>
+                  <span className="text-xs font-medium text-white">{stateLabelMap[s.primaryState]}</span>
                 </div>
-                <span className="text-[10px] shrink-0" style={{ color: '#B2BEC3' }}>
+                <span className="text-[10px] shrink-0" style={{ color: '#5A7A9B' }}>
                   {timeAgo(s.timestamp)}
                 </span>
               </div>

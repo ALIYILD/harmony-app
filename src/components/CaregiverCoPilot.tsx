@@ -6,46 +6,46 @@ import type { ChildState, Suggestion, Trajectory } from '../types';
 // --- Helpers & Constants ---
 
 const STATE_CONFIG: Record<ChildState, { label: string; bg: string; text: string; borderPulse: boolean }> = {
-  calm:            { label: 'calm',              bg: 'bg-green-50',    text: 'text-green-700',    borderPulse: false },
-  engaged:         { label: 'engaged',           bg: 'bg-emerald-50',  text: 'text-emerald-700',  borderPulse: false },
-  uneasy:          { label: 'uneasy',            bg: 'bg-amber-50',    text: 'text-amber-700',    borderPulse: false },
-  confused:        { label: 'confused',           bg: 'bg-orange-50',   text: 'text-orange-700',   borderPulse: false },
-  frustrated:      { label: 'frustrated',         bg: 'bg-red-50',      text: 'text-red-700',      borderPulse: true  },
-  overloaded:      { label: 'overloaded',         bg: 'bg-red-100',     text: 'text-red-800',      borderPulse: true  },
-  dysregulated:    { label: 'dysregulated',       bg: 'bg-red-200',     text: 'text-red-900',      borderPulse: true  },
-  shutdown_risk:   { label: 'at risk of shutdown', bg: 'bg-purple-100',  text: 'text-purple-800',   borderPulse: true  },
-  sensory_seeking: { label: 'sensory seeking',    bg: 'bg-violet-50',   text: 'text-violet-700',   borderPulse: false },
+  calm:            { label: 'calm',              bg: 'bg-[#0D1B2A]',  text: 'text-[#38C9F0]',  borderPulse: false },
+  engaged:         { label: 'engaged',           bg: 'bg-[#0D1B2A]',  text: 'text-[#00D9A6]',  borderPulse: false },
+  uneasy:          { label: 'uneasy',            bg: 'bg-[#0D1B2A]',  text: 'text-[#F0C038]',  borderPulse: false },
+  confused:        { label: 'confused',           bg: 'bg-[#0D1B2A]',  text: 'text-[#F0C038]',  borderPulse: false },
+  frustrated:      { label: 'frustrated',         bg: 'bg-[#0D1B2A]',  text: 'text-[#FF6B6B]',  borderPulse: true  },
+  overloaded:      { label: 'overloaded',         bg: 'bg-[#0D1B2A]',  text: 'text-[#FF6B6B]',  borderPulse: true  },
+  dysregulated:    { label: 'dysregulated',       bg: 'bg-[#0D1B2A]',  text: 'text-[#FF6B6B]',  borderPulse: true  },
+  shutdown_risk:   { label: 'at risk of shutdown', bg: 'bg-[#0D1B2A]',  text: 'text-[#8B6EE8]',  borderPulse: true  },
+  sensory_seeking: { label: 'sensory seeking',    bg: 'bg-[#0D1B2A]',  text: 'text-[#8B6EE8]',  borderPulse: false },
 };
 
 const BANNER_COLORS: Record<ChildState, string> = {
-  calm:            'from-[#00B894]/80 to-[#00B894]/60',
-  engaged:         'from-emerald-400/80 to-emerald-300/60',
-  uneasy:          'from-[#FDCB6E]/80 to-[#FDCB6E]/60',
-  confused:        'from-orange-400/80 to-orange-300/60',
-  frustrated:      'from-[#FF6B6B]/80 to-[#FF6B6B]/60',
-  overloaded:      'from-red-500/80 to-red-400/60',
-  dysregulated:    'from-red-600/80 to-red-500/60',
-  shutdown_risk:   'from-purple-500/80 to-purple-400/60',
-  sensory_seeking: 'from-violet-400/80 to-violet-300/60',
+  calm:            'from-[#060E1C] via-[#0D1B2A] to-[#38C9F0]/20',
+  engaged:         'from-[#060E1C] via-[#0D1B2A] to-[#00D9A6]/20',
+  uneasy:          'from-[#060E1C] via-[#0D1B2A] to-[#F0C038]/20',
+  confused:        'from-[#060E1C] via-[#0D1B2A] to-[#F0C038]/15',
+  frustrated:      'from-[#060E1C] via-[#0D1B2A] to-[#FF6B6B]/25',
+  overloaded:      'from-[#060E1C] via-[#1A0A0A] to-[#FF6B6B]/30',
+  dysregulated:    'from-[#060E1C] via-[#1A0A0A] to-[#FF6B6B]/40',
+  shutdown_risk:   'from-[#060E1C] via-[#0D1B2A] to-[#8B6EE8]/25',
+  sensory_seeking: 'from-[#060E1C] via-[#0D1B2A] to-[#8B6EE8]/20',
 };
 
 const BANNER_TEXT: Record<ChildState, string> = {
-  calm:            'text-green-950',
-  engaged:         'text-emerald-950',
-  uneasy:          'text-amber-950',
-  confused:        'text-orange-950',
+  calm:            'text-white',
+  engaged:         'text-white',
+  uneasy:          'text-white',
+  confused:        'text-white',
   frustrated:      'text-white',
   overloaded:      'text-white',
   dysregulated:    'text-white',
   shutdown_risk:   'text-white',
-  sensory_seeking: 'text-violet-950',
+  sensory_seeking: 'text-white',
 };
 
 const TYPE_BADGE: Record<Suggestion['type'], { label: string; bg: string; text: string }> = {
-  do:            { label: 'DO',            bg: 'bg-[#00B894]/15', text: 'text-[#00B894]' },
+  do:            { label: 'DO',            bg: 'bg-[#00D9A6]/15', text: 'text-[#00D9A6]' },
   avoid:         { label: 'AVOID',         bg: 'bg-[#FF6B6B]/15', text: 'text-[#FF6B6B]' },
-  sensory:       { label: 'SENSORY',       bg: 'bg-purple-100',   text: 'text-purple-600' },
-  communication: { label: 'COMMUNICATION', bg: 'bg-blue-100',     text: 'text-blue-600' },
+  sensory:       { label: 'SENSORY',       bg: 'bg-[#8B6EE8]/15', text: 'text-[#8B6EE8]' },
+  communication: { label: 'COMMUNICATION', bg: 'bg-[#38C9F0]/15', text: 'text-[#38C9F0]' },
 };
 
 const TRAJECTORY_DISPLAY: Record<Trajectory, { arrow: string; label: string }> = {
@@ -84,7 +84,7 @@ function Toast({ message, visible }: { message: string; visible: boolean }) {
         visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
       }`}
     >
-      <div className="bg-gray-900 text-white text-sm font-medium px-5 py-2.5 rounded-full shadow-lg">
+      <div className="bg-[#132D46] text-white text-sm font-medium px-5 py-2.5 rounded-full shadow-lg border border-[#1A3A5C]">
         {message}
       </div>
     </div>
@@ -95,24 +95,24 @@ function Toast({ message, visible }: { message: string; visible: boolean }) {
 
 function ModalityBars({ contributions }: { contributions: { audio: number; vision: number; biometric: number; context: number } }) {
   const items = [
-    { key: 'Audio',     value: contributions.audio,     color: 'bg-blue-400' },
-    { key: 'Vision',    value: contributions.vision,    color: 'bg-violet-400' },
-    { key: 'Biometric', value: contributions.biometric, color: 'bg-pink-400' },
-    { key: 'Context',   value: contributions.context,   color: 'bg-amber-400' },
+    { key: 'Audio',     value: contributions.audio,     color: 'bg-[#38C9F0]' },
+    { key: 'Vision',    value: contributions.vision,    color: 'bg-[#8B6EE8]' },
+    { key: 'Biometric', value: contributions.biometric, color: 'bg-[#38C9F0]' },
+    { key: 'Context',   value: contributions.context,   color: 'bg-[#8B6EE8]' },
   ];
 
   return (
     <div className="flex items-end gap-3 mt-3">
       {items.map((item) => (
         <div key={item.key} className="flex flex-col items-center gap-1 flex-1">
-          <span className="text-[10px] text-gray-500 font-medium">{Math.round(item.value * 100)}%</span>
-          <div className="w-full bg-gray-100 rounded-full h-16 relative overflow-hidden">
+          <span className="text-[10px] text-[#5A7A9B] font-medium">{Math.round(item.value * 100)}%</span>
+          <div className="w-full bg-[#060E1C] rounded-full h-16 relative overflow-hidden">
             <div
               className={`absolute bottom-0 w-full rounded-full ${item.color} transition-all duration-500`}
               style={{ height: `${item.value * 100}%` }}
             />
           </div>
-          <span className="text-[10px] text-gray-400 font-medium">{item.key}</span>
+          <span className="text-[10px] text-[#5A7A9B] font-medium">{item.key}</span>
         </div>
       ))}
     </div>
@@ -127,8 +127,8 @@ function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {
 
   return (
     <div
-      className={`rounded-2xl p-4 shadow-sm border border-gray-100 transition-all ${
-        isAvoid ? 'bg-red-50/50 border-red-100' : 'bg-white'
+      className={`rounded-2xl p-4 shadow-sm border border-[#1A3A5C] transition-all ${
+        isAvoid ? 'bg-[#FF6B6B]/5 border-[#FF6B6B]/30' : 'bg-[#0D1B2A]'
       }`}
     >
       <div className="flex items-start gap-3">
@@ -139,14 +139,14 @@ function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {
               {badge.label}
             </span>
             {suggestion.successRate && (
-              <span className="text-[10px] font-medium text-[#00B894] bg-[#00B894]/10 px-2 py-0.5 rounded-full">
+              <span className="text-[10px] font-medium text-[#00D9A6] bg-[#00D9A6]/10 px-2 py-0.5 rounded-full">
                 Worked {suggestion.successRate}% of the time
               </span>
             )}
           </div>
-          <p className="text-sm font-semibold text-gray-800 leading-snug">{suggestion.text}</p>
+          <p className="text-sm font-semibold text-white leading-snug">{suggestion.text}</p>
           {suggestion.detail && (
-            <p className="text-xs text-gray-500 mt-1 leading-relaxed">{suggestion.detail}</p>
+            <p className="text-xs text-[#5A7A9B] mt-1 leading-relaxed">{suggestion.detail}</p>
           )}
         </div>
       </div>
@@ -193,7 +193,7 @@ export default function CaregiverCoPilot() {
     `${childName}'s current state is being monitored. The system is analysing multiple inputs to provide guidance.`;
 
   return (
-    <div className="min-h-screen pb-28" style={{ backgroundColor: '#F8F7FF' }}>
+    <div className="min-h-screen pb-28 bg-[#060E1C]">
       {/* 1. Current State Banner */}
       <div className={`bg-gradient-to-r ${bannerGradient} px-5 py-4`}>
         <div className="flex items-center justify-between">
@@ -203,7 +203,7 @@ export default function CaregiverCoPilot() {
             </h2>
             <div className="flex items-center gap-2 mt-1">
               <span
-                className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${bannerText} bg-white/25`}
+                className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${bannerText} bg-white/10`}
               >
                 {currentState.confidenceLevel.charAt(0).toUpperCase() + currentState.confidenceLevel.slice(1)} · {Math.round(currentState.confidence * 100)}%
               </span>
@@ -219,16 +219,16 @@ export default function CaregiverCoPilot() {
         {/* 2. Priority Action Card */}
         {prioritySuggestion && (
           <div
-            className={`rounded-2xl p-5 shadow-md bg-white border-2 ${
-              isEscalating ? 'border-[#FF6B6B] animate-pulse-border' : 'border-[#6C5CE7]/20'
+            className={`rounded-2xl p-5 shadow-md bg-[#0D1B2A] border-2 ${
+              isEscalating ? 'border-[#FF6B6B] animate-pulse-border' : 'border-[#1A3A5C]'
             }`}
           >
             <div className="flex items-center gap-1 mb-2">
-              <span className="text-[10px] font-bold tracking-wider text-[#6C5CE7] bg-[#6C5CE7]/10 px-2 py-0.5 rounded-full">
+              <span className="text-[10px] font-bold tracking-wider text-[#38C9F0] bg-[#38C9F0]/10 px-2 py-0.5 rounded-full">
                 PRIORITY ACTION
               </span>
               {prioritySuggestion.successRate && (
-                <span className="text-[10px] font-medium text-[#00B894] bg-[#00B894]/10 px-2 py-0.5 rounded-full">
+                <span className="text-[10px] font-medium text-[#00D9A6] bg-[#00D9A6]/10 px-2 py-0.5 rounded-full">
                   Worked {prioritySuggestion.successRate}% of the time
                 </span>
               )}
@@ -236,9 +236,9 @@ export default function CaregiverCoPilot() {
             <div className="flex items-start gap-3">
               <span className="text-2xl mt-0.5">{prioritySuggestion.icon}</span>
               <div>
-                <p className="text-base font-bold text-gray-900 leading-snug">{prioritySuggestion.text}</p>
+                <p className="text-base font-bold text-white leading-snug">{prioritySuggestion.text}</p>
                 {prioritySuggestion.detail && (
-                  <p className="text-sm text-gray-500 mt-1 leading-relaxed">{prioritySuggestion.detail}</p>
+                  <p className="text-sm text-[#5A7A9B] mt-1 leading-relaxed">{prioritySuggestion.detail}</p>
                 )}
               </div>
             </div>
@@ -248,7 +248,7 @@ export default function CaregiverCoPilot() {
         {/* 3. Suggestion Cards */}
         {remainingSuggestions.length > 0 && (
           <div className="space-y-3">
-            <h3 className="text-xs font-bold text-gray-400 tracking-wider uppercase px-1">Suggestions</h3>
+            <h3 className="text-xs font-bold text-[#5A7A9B] tracking-wider uppercase px-1">Suggestions</h3>
             {remainingSuggestions.map((s) => (
               <SuggestionCard key={s.id} suggestion={s} />
             ))}
@@ -257,29 +257,29 @@ export default function CaregiverCoPilot() {
 
         {/* 4. Quick Actions Row */}
         <div>
-          <h3 className="text-xs font-bold text-gray-400 tracking-wider uppercase px-1 mb-2">Quick Actions</h3>
+          <h3 className="text-xs font-bold text-[#5A7A9B] tracking-wider uppercase px-1 mb-2">Quick Actions</h3>
           <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
             {QUICK_ACTIONS.map((action) => (
               <button
                 key={action.label}
                 onClick={() => handleQuickAction(action.label)}
-                className="shrink-0 flex flex-col items-center gap-1 bg-white rounded-2xl px-3 py-3 shadow-sm border border-gray-100 active:scale-95 transition-transform min-w-[76px]"
+                className="shrink-0 flex flex-col items-center gap-1 bg-[#0D1B2A] rounded-2xl px-3 py-3 shadow-sm border border-[#1A3A5C] active:scale-95 transition-transform min-w-[76px]"
               >
                 <span className="text-xl">{action.emoji}</span>
-                <span className="text-[10px] font-medium text-gray-600 whitespace-nowrap">{action.label}</span>
+                <span className="text-[10px] font-medium text-[#38C9F0] whitespace-nowrap">{action.label}</span>
               </button>
             ))}
           </div>
         </div>
 
         {/* 5. "What's Happening" Explainer */}
-        <div className="rounded-2xl p-5 bg-white shadow-sm border border-gray-100">
-          <h3 className="text-xs font-bold text-[#6C5CE7] tracking-wider uppercase mb-2">
+        <div className="rounded-2xl p-5 bg-[#0D1B2A] shadow-sm border border-[#1A3A5C]">
+          <h3 className="text-xs font-bold text-[#38C9F0] tracking-wider uppercase mb-2">
             What's Happening
           </h3>
-          <p className="text-sm text-gray-600 leading-relaxed">{explainer}</p>
+          <p className="text-sm text-[#C8D4E4] leading-relaxed">{explainer}</p>
           <div className="mt-3">
-            <h4 className="text-[10px] font-bold text-gray-400 tracking-wider uppercase mb-1">
+            <h4 className="text-[10px] font-bold text-[#5A7A9B] tracking-wider uppercase mb-1">
               Contributing Modalities
             </h4>
             <ModalityBars contributions={currentState.modalityContributions} />

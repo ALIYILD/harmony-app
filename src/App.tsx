@@ -39,19 +39,30 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F8F7FF] flex flex-col">
+    <div className="min-h-screen bg-navy flex flex-col font-glory">
       {/* Top Header Bar */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-lg border-b border-purple-100 px-4 py-3 flex items-center justify-between">
+      <header className="sticky top-0 z-50 bg-navy-card/90 backdrop-blur-lg border-b border-navy-border px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#6C5CE7] to-[#FF7675] flex items-center justify-center text-white text-sm font-bold">H</div>
+          <svg width="32" height="32" viewBox="0 0 68 68" fill="none">
+            <defs>
+              <linearGradient id="logo-grad" x1="0" y1="68" x2="68" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#38C9F0"/>
+                <stop offset="100%" stopColor="#8B6EE8"/>
+              </linearGradient>
+            </defs>
+            <path d="M20 48C20 48 16 38 18 32C20 26 26 28 28 24C30 20 28 16 28 16" stroke="url(#logo-grad)" strokeWidth="4" strokeLinecap="round" fill="none"/>
+            <circle cx="28" cy="12" r="5" fill="#38C9F0"/>
+            <path d="M32 48C32 48 36 34 38 30C40 26 44 28 46 24C48 20 46 18 46 18" stroke="url(#logo-grad)" strokeWidth="4" strokeLinecap="round" fill="none"/>
+            <circle cx="44" cy="14" r="6" fill="#8B6EE8"/>
+          </svg>
           <div>
-            <h1 className="text-sm font-bold text-[#2D3436] leading-none">Harmony</h1>
-            <p className="text-[10px] text-[#B2BEC3] font-medium tracking-wider uppercase">Autism Support Co-Pilot</p>
+            <h1 className="text-sm font-bold text-white leading-none">HarmonyAlert</h1>
+            <p className="text-[10px] text-muted font-semibold tracking-wider uppercase">Real-time coaching</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           {isSimulating && (
-            <span className="text-[10px] font-semibold text-[#FF7675] bg-red-50 px-2 py-1 rounded-full animate-pulse">
+            <span className="text-[10px] font-semibold text-cyan bg-cyan/10 px-2 py-1 rounded-full animate-pulse">
               LIVE DEMO
             </span>
           )}
@@ -59,29 +70,29 @@ export default function App() {
       </header>
 
       {/* Simulation Control Bar */}
-      <div className="sticky top-[52px] z-40 bg-white/95 backdrop-blur border-b border-purple-50 px-4 py-2 flex items-center gap-2">
+      <div className="sticky top-[52px] z-40 bg-navy-card/95 backdrop-blur border-b border-navy-border px-4 py-2 flex items-center gap-2">
         <button
           onClick={run}
           disabled={isSimulating}
-          className="px-4 py-2 bg-gradient-to-r from-[#6C5CE7] to-[#a29bfe] text-white text-xs font-bold rounded-xl disabled:opacity-40 transition-all hover:shadow-lg active:scale-95"
+          className="px-4 py-2 bg-gradient-to-r from-cyan to-lavender text-white text-xs font-bold rounded-xl disabled:opacity-40 transition-all hover:shadow-lg hover:shadow-cyan/20 active:scale-95"
         >
           {isSimulating ? '⏳ Simulating...' : '▶ Run Demo Scenario'}
         </button>
         <button
           onClick={reset}
-          className="px-3 py-2 bg-gray-100 text-gray-600 text-xs font-semibold rounded-xl hover:bg-gray-200 transition-all active:scale-95"
+          className="px-3 py-2 bg-navy-hover text-muted text-xs font-semibold rounded-xl hover:bg-navy-border hover:text-body transition-all active:scale-95"
         >
           ↺ Reset
         </button>
         {isSimulating && (
           <div className="flex-1 flex items-center gap-2">
-            <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div className="flex-1 h-1.5 bg-navy-hover rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-[#6C5CE7] to-[#FF7675] rounded-full transition-all duration-1000"
+                className="h-full bg-gradient-to-r from-cyan to-lavender rounded-full transition-all duration-1000"
                 style={{ width: `${(simulationPhase / 5) * 100}%` }}
               />
             </div>
-            <span className="text-[10px] font-medium text-[#B2BEC3] whitespace-nowrap">
+            <span className="text-[10px] font-medium text-muted whitespace-nowrap">
               {phaseLabels[simulationPhase]}
             </span>
           </div>
@@ -94,15 +105,15 @@ export default function App() {
       </main>
 
       {/* Bottom Tab Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-purple-100 px-2 py-1.5 flex justify-around max-w-lg mx-auto">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-navy-card/95 backdrop-blur-lg border-t border-navy-border px-2 py-1.5 flex justify-around max-w-lg mx-auto">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all ${
               activeTab === tab.id
-                ? 'text-[#6C5CE7] bg-purple-50'
-                : 'text-[#B2BEC3]'
+                ? 'text-cyan bg-cyan/10'
+                : 'text-muted'
             }`}
           >
             <span className="text-lg">{tab.icon}</span>
