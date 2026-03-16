@@ -7,6 +7,9 @@ import EventLogger from './components/EventLogger';
 import DailySummary from './components/DailySummary';
 import ChildProfileView from './components/ChildProfileView';
 import GestureDictionary from './components/GestureDictionary';
+import SOSGuide from './components/SOSGuide';
+import CalmToolkit from './components/CalmToolkit';
+import EnvironmentScanner from './components/EnvironmentScanner';
 import type { TabId } from './types';
 
 const tabs: { id: TabId; label: string; icon: string; subtitle: string }[] = [
@@ -121,6 +124,9 @@ export default function App() {
   const { activeTab, setActiveTab, isSimulating, simulationPhase, currentState } = useAppStore();
   const { run, reset } = useSimulation();
   const [demoExpanded, setDemoExpanded] = useState(false);
+  const [showSOS, setShowSOS] = useState(false);
+  const [showCalm, setShowCalm] = useState(false);
+  const [showEnvScan, setShowEnvScan] = useState(false);
 
   const stateName = currentState.primaryState.replace('_', ' ');
   const stateDisplay = stateName.charAt(0).toUpperCase() + stateName.slice(1);
@@ -150,6 +156,11 @@ export default function App() {
       {/* Global Toast System */}
       <ToastContainer />
 
+      {/* Full-screen overlays */}
+      {showSOS && <SOSGuide onClose={() => setShowSOS(false)} />}
+      {showCalm && <CalmToolkit onClose={() => setShowCalm(false)} />}
+      {showEnvScan && <EnvironmentScanner onClose={() => setShowEnvScan(false)} />}
+
       {/* Top Header Bar */}
       <header className="sticky top-0 z-50 bg-[#0D1B2A]/90 backdrop-blur-lg border-b border-[#1A3A5C] px-4 py-3 flex items-center justify-between lg:px-8">
         <div className="flex items-center gap-2">
@@ -166,7 +177,26 @@ export default function App() {
             <span>{stateInfo.emoji}</span>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 lg:gap-3">
+          {/* Quick action buttons */}
+          <button
+            onClick={() => setShowSOS(true)}
+            className="flex items-center gap-1 px-2.5 py-1.5 bg-[#FF6B6B]/15 border border-[#FF6B6B]/30 text-[#FF6B6B] text-[10px] lg:text-xs font-bold rounded-full hover:bg-[#FF6B6B]/25 active:scale-95 transition-all"
+          >
+            🆘 Help Now
+          </button>
+          <button
+            onClick={() => setShowCalm(true)}
+            className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 bg-[#00D9A6]/10 border border-[#00D9A6]/30 text-[#00D9A6] text-[10px] lg:text-xs font-bold rounded-full hover:bg-[#00D9A6]/20 active:scale-95 transition-all"
+          >
+            🧘 Calm Tools
+          </button>
+          <button
+            onClick={() => setShowEnvScan(true)}
+            className="hidden md:flex items-center gap-1 px-2.5 py-1.5 bg-[#38C9F0]/10 border border-[#38C9F0]/30 text-[#38C9F0] text-[10px] lg:text-xs font-bold rounded-full hover:bg-[#38C9F0]/20 active:scale-95 transition-all"
+          >
+            🔍 Scan Room
+          </button>
           <span className="hidden lg:inline text-[#5A7A9B] text-sm italic">Connection, not correction.</span>
           {isSimulating && (
             <span className="text-[10px] font-semibold text-[#38C9F0] bg-[#38C9F0]/10 px-2 py-1 rounded-full animate-pulse lg:text-xs lg:px-3">
@@ -256,6 +286,20 @@ export default function App() {
               </button>
             ))}
           </nav>
+
+          {/* Quick Actions */}
+          <div className="p-3 border-t border-[#1A3A5C] flex flex-col gap-2">
+            <p className="text-[10px] font-semibold text-[#5A7A9B] uppercase tracking-wider text-center mb-1">Quick Actions</p>
+            <button onClick={() => setShowSOS(true)} className="w-full flex items-center gap-2 px-3 py-2.5 bg-[#FF6B6B]/10 border border-[#FF6B6B]/25 text-[#FF6B6B] text-sm font-bold rounded-xl hover:bg-[#FF6B6B]/20 active:scale-95 transition-all">
+              🆘 Help Now
+            </button>
+            <button onClick={() => setShowCalm(true)} className="w-full flex items-center gap-2 px-3 py-2 bg-[#00D9A6]/10 border border-[#00D9A6]/25 text-[#00D9A6] text-sm font-semibold rounded-xl hover:bg-[#00D9A6]/20 active:scale-95 transition-all">
+              🧘 Calm Tools
+            </button>
+            <button onClick={() => setShowEnvScan(true)} className="w-full flex items-center gap-2 px-3 py-2 bg-[#38C9F0]/10 border border-[#38C9F0]/25 text-[#38C9F0] text-sm font-semibold rounded-xl hover:bg-[#38C9F0]/20 active:scale-95 transition-all">
+              🔍 Scan Room
+            </button>
+          </div>
 
           {/* Sim controls at bottom */}
           <div className="p-3 border-t border-[#1A3A5C] flex flex-col gap-2">
