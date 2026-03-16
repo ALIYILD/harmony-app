@@ -17,6 +17,9 @@ import SessionTracker from './components/SessionTracker';
 import PricingPage from './components/PricingPage';
 import HarmonyChat from './components/HarmonyChat';
 import VoiceAnalysis from './components/VoiceAnalysis';
+import Onboarding from './components/Onboarding';
+import TherapistReport from './components/TherapistReport';
+import SettingsPage from './components/SettingsPage';
 import type { TabId } from './types';
 
 const tabs: { id: TabId; label: string; icon: string; subtitle: string }[] = [
@@ -151,6 +154,9 @@ export default function App() {
   const [showVideoAnalysis, setShowVideoAnalysis] = useState(false);
   const [showPricing, setShowPricing] = useState(false);
   const [showVoiceAnalysis, setShowVoiceAnalysis] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showTherapistReport, setShowTherapistReport] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   const stateName = currentState.primaryState.replace('_', ' ');
   const stateDisplay = stateName.charAt(0).toUpperCase() + stateName.slice(1);
@@ -200,6 +206,9 @@ export default function App() {
       {showVideoAnalysis && <VideoAnalysis onClose={() => setShowVideoAnalysis(false)} />}
       {showPricing && <PricingPage onClose={() => setShowPricing(false)} />}
       {showVoiceAnalysis && <VoiceAnalysis onClose={() => setShowVoiceAnalysis(false)} />}
+      {showOnboarding && <Onboarding onComplete={() => setShowOnboarding(false)} />}
+      {showTherapistReport && <TherapistReport onClose={() => setShowTherapistReport(false)} />}
+      {showSettings && <SettingsPage onClose={() => setShowSettings(false)} />}
 
       {/* Top Header Bar */}
       <header className="sticky top-0 z-50 bg-[#0D1B2A]/90 backdrop-blur-lg border-b border-[#1A3A5C] px-4 py-3 flex items-center justify-between lg:px-8">
@@ -357,8 +366,17 @@ export default function App() {
             <button onClick={() => setShowEnvScan(true)} className="w-full flex items-center gap-2 px-3 py-2 bg-[#38C9F0]/10 border border-[#38C9F0]/25 text-[#38C9F0] text-sm font-semibold rounded-xl hover:bg-[#38C9F0]/20 active:scale-95 transition-all">
               🔍 Scan Room
             </button>
+            <button onClick={() => setShowTherapistReport(true)} className="w-full flex items-center gap-2 px-3 py-2 bg-[#00D9A6]/10 border border-[#00D9A6]/25 text-[#00D9A6] text-sm font-semibold rounded-xl hover:bg-[#00D9A6]/20 active:scale-95 transition-all">
+              📋 Therapist Report
+            </button>
             <button onClick={() => setShowPricing(true)} className="w-full flex items-center gap-2 px-3 py-2 bg-[#8B6EE8]/10 border border-[#8B6EE8]/25 text-[#8B6EE8] text-sm font-semibold rounded-xl hover:bg-[#8B6EE8]/20 active:scale-95 transition-all">
               💎 Plans & Pricing
+            </button>
+            <button onClick={() => setShowSettings(true)} className="w-full flex items-center gap-2 px-3 py-2 bg-[#5A7A9B]/10 border border-[#5A7A9B]/25 text-[#5A7A9B] text-sm font-semibold rounded-xl hover:bg-[#5A7A9B]/20 active:scale-95 transition-all">
+              ⚙️ Settings
+            </button>
+            <button onClick={() => setShowOnboarding(true)} className="w-full flex items-center gap-2 px-3 py-2 bg-[#5A7A9B]/10 border border-[#5A7A9B]/25 text-[#5A7A9B] text-sm font-semibold rounded-xl hover:bg-[#5A7A9B]/20 active:scale-95 transition-all">
+              🔄 Setup Wizard
             </button>
           </div>
 
