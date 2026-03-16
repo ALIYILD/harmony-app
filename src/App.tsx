@@ -43,17 +43,19 @@ export default function App() {
       {/* Top Header Bar */}
       <header className="sticky top-0 z-50 bg-navy-card/90 backdrop-blur-lg border-b border-navy-border px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <svg width="32" height="32" viewBox="0 0 68 68" fill="none">
+          <svg width="36" height="36" viewBox="0 0 68 68" fill="none">
             <defs>
-              <linearGradient id="logo-grad" x1="0" y1="68" x2="68" y2="0" gradientUnits="userSpaceOnUse">
+              <linearGradient id="logo-grad" x1="0" y1="0" x2="68" y2="0" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" stopColor="#38C9F0"/>
                 <stop offset="100%" stopColor="#8B6EE8"/>
               </linearGradient>
             </defs>
-            <path d="M20 48C20 48 16 38 18 32C20 26 26 28 28 24C30 20 28 16 28 16" stroke="url(#logo-grad)" strokeWidth="4" strokeLinecap="round" fill="none"/>
-            <circle cx="28" cy="12" r="5" fill="#38C9F0"/>
-            <path d="M32 48C32 48 36 34 38 30C40 26 44 28 46 24C48 20 46 18 46 18" stroke="url(#logo-grad)" strokeWidth="4" strokeLinecap="round" fill="none"/>
-            <circle cx="44" cy="14" r="6" fill="#8B6EE8"/>
+            {/* Child - left, smaller, cyan */}
+            <circle cx="24" cy="18" r="6" fill="#38C9F0"/>
+            {/* Parent - right, taller, lavender */}
+            <circle cx="42" cy="14" r="7.5" fill="#8B6EE8"/>
+            {/* Wave connecting them - the conversation frequency */}
+            <path d="M6 56 C12 34, 20 40, 28 30 C33 23, 36 28, 40 32 C44 36, 52 26, 62 56" stroke="url(#logo-grad)" strokeWidth="5.5" strokeLinecap="round" fill="none"/>
           </svg>
           <div>
             <h1 className="text-sm font-bold text-white leading-none">HarmonyAlert</h1>
