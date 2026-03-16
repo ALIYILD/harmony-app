@@ -15,6 +15,7 @@ import VideoAnalysis from './components/VideoAnalysis';
 import ParentToneCoach from './components/ParentToneCoach';
 import SessionTracker from './components/SessionTracker';
 import PricingPage from './components/PricingPage';
+import HarmonyChat from './components/HarmonyChat';
 import type { TabId } from './types';
 
 const tabs: { id: TabId; label: string; icon: string; subtitle: string }[] = [
@@ -113,24 +114,29 @@ function ToastContainer() {
 }
 
 const LogoSvg = ({ size = 36 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 200 160" fill="none">
+  <svg width={size} height={size} viewBox="0 0 220 175" fill="none">
     <defs>
-      <linearGradient id="logo-wave" x1="0" y1="80" x2="200" y2="80" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stopColor="#5BC9F0"/>
-        <stop offset="50%" stopColor="#6BACE8"/>
-        <stop offset="100%" stopColor="#8B7EE8"/>
+      <linearGradient id="logo-child" x1="0" y1="100" x2="110" y2="100" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stopColor="#5ECEF3"/>
+        <stop offset="100%" stopColor="#6BB4EA"/>
       </linearGradient>
-      <linearGradient id="logo-parent" x1="120" y1="0" x2="170" y2="160" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stopColor="#9B8EF0"/>
-        <stop offset="100%" stopColor="#7B8EE8"/>
+      <linearGradient id="logo-parent-body" x1="100" y1="40" x2="190" y2="170" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stopColor="#7BA4EC"/>
+        <stop offset="100%" stopColor="#9088F0"/>
+      </linearGradient>
+      <linearGradient id="logo-parent-head" x1="130" y1="5" x2="155" y2="45" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stopColor="#9B90F2"/>
+        <stop offset="100%" stopColor="#8088EE"/>
       </linearGradient>
     </defs>
-    {/* Child head — smaller, left, cyan */}
-    <circle cx="82" cy="62" r="14" fill="#5BC9F0"/>
-    {/* Parent head — larger, right, higher, lavender */}
-    <circle cx="138" cy="28" r="18" fill="url(#logo-parent)"/>
-    {/* Wave body — child flows left, parent flows right, connected */}
-    <path d="M2 148 C20 120, 40 105, 60 95 C75 88, 85 92, 95 100 C105 108, 115 115, 130 100 C145 85, 155 60, 160 55 C165 50, 170 55, 175 70 C180 90, 185 120, 195 148" fill="url(#logo-wave)" opacity="0.9"/>
+    {/* Child head */}
+    <circle cx="90" cy="65" r="15" fill="url(#logo-child)"/>
+    {/* Parent head */}
+    <circle cx="148" cy="25" r="20" fill="url(#logo-parent-head)"/>
+    {/* Child body — thin wave flowing to the left */}
+    <path d="M5 160 C20 145, 35 130, 55 115 C70 103, 80 100, 92 105 C100 109, 105 115, 112 118" fill="url(#logo-child)"/>
+    {/* Parent body — large filled curve flowing to the right */}
+    <path d="M112 118 C120 122, 128 118, 135 108 C142 96, 148 75, 152 62 C155 52, 160 50, 166 58 C175 72, 182 100, 190 130 C195 148, 200 160, 210 170 L112 170 Z" fill="url(#logo-parent-body)"/>
   </svg>
 );
 
@@ -403,6 +409,9 @@ export default function App() {
           </button>
         ))}
       </nav>
+
+      {/* Floating AI Chatbot */}
+      <HarmonyChat />
     </div>
   );
 }
