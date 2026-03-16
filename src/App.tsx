@@ -112,17 +112,25 @@ function ToastContainer() {
   );
 }
 
-const LogoSvg = () => (
-  <svg width="36" height="36" viewBox="0 0 68 68" fill="none">
+const LogoSvg = ({ size = 36 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 200 160" fill="none">
     <defs>
-      <linearGradient id="logo-grad" x1="0" y1="0" x2="68" y2="0" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stopColor="#38C9F0"/>
-        <stop offset="100%" stopColor="#8B6EE8"/>
+      <linearGradient id="logo-wave" x1="0" y1="80" x2="200" y2="80" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stopColor="#5BC9F0"/>
+        <stop offset="50%" stopColor="#6BACE8"/>
+        <stop offset="100%" stopColor="#8B7EE8"/>
+      </linearGradient>
+      <linearGradient id="logo-parent" x1="120" y1="0" x2="170" y2="160" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stopColor="#9B8EF0"/>
+        <stop offset="100%" stopColor="#7B8EE8"/>
       </linearGradient>
     </defs>
-    <circle cx="24" cy="18" r="6" fill="#38C9F0"/>
-    <circle cx="42" cy="14" r="7.5" fill="#8B6EE8"/>
-    <path d="M6 56 C12 34, 20 40, 28 30 C33 23, 36 28, 40 32 C44 36, 52 26, 62 56" stroke="url(#logo-grad)" strokeWidth="5.5" strokeLinecap="round" fill="none"/>
+    {/* Child head — smaller, left, cyan */}
+    <circle cx="82" cy="62" r="14" fill="#5BC9F0"/>
+    {/* Parent head — larger, right, higher, lavender */}
+    <circle cx="138" cy="28" r="18" fill="url(#logo-parent)"/>
+    {/* Wave body — child flows left, parent flows right, connected */}
+    <path d="M2 148 C20 120, 40 105, 60 95 C75 88, 85 92, 95 100 C105 108, 115 115, 130 100 C145 85, 155 60, 160 55 C165 50, 170 55, 175 70 C180 90, 185 120, 195 148" fill="url(#logo-wave)" opacity="0.9"/>
   </svg>
 );
 
