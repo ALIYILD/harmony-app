@@ -19,7 +19,7 @@ export function useSimulation() {
     cleanup();
     setIsSimulating(true);
     setSimulationPhase(0);
-    setActiveTab('home');
+    setActiveTab('analysis');
 
     // Phase 0: Calm baseline (already default)
 

@@ -7,13 +7,15 @@ import EventLogger from './components/EventLogger';
 import DailySummary from './components/DailySummary';
 import ChildProfileView from './components/ChildProfileView';
 import GestureDictionary from './components/GestureDictionary';
+import HomeDashboard from './components/HomeDashboard';
 import SOSGuide from './components/SOSGuide';
 import CalmToolkit from './components/CalmToolkit';
 import EnvironmentScanner from './components/EnvironmentScanner';
 import type { TabId } from './types';
 
 const tabs: { id: TabId; label: string; icon: string; subtitle: string }[] = [
-  { id: 'home', label: 'Home', icon: '🏠', subtitle: 'Real-time monitoring' },
+  { id: 'home', label: 'Home', icon: '🏠', subtitle: 'Overview & summary' },
+  { id: 'analysis', label: 'Analysis', icon: '📡', subtitle: 'Live sensors & camera' },
   { id: 'guide', label: 'Guide', icon: '💡', subtitle: 'What to do now' },
   { id: 'log', label: 'Log', icon: '✏️', subtitle: 'Record events' },
   { id: 'insights', label: 'Insights', icon: '📊', subtitle: 'Patterns & trends' },
@@ -134,7 +136,8 @@ export default function App() {
 
   const renderScreen = () => {
     switch (activeTab) {
-      case 'home': return <StateMonitor />;
+      case 'home': return <HomeDashboard onSOS={() => setShowSOS(true)} onCalm={() => setShowCalm(true)} onEnvScan={() => setShowEnvScan(true)} onNavigate={setActiveTab} />;
+      case 'analysis': return <StateMonitor />;
       case 'guide': return <CaregiverCoPilot />;
       case 'log': return <EventLogger />;
       case 'insights': return <DailySummary />;
