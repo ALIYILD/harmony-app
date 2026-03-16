@@ -276,6 +276,7 @@ export default function CameraFeed() {
 
   const currentState = useAppStore((s) => s.currentState);
   const sensorReadings = useAppStore((s) => s.sensorReadings);
+  const gestureDictionary = useAppStore((s) => s.gestureDictionary);
 
   /* ── start camera ── */
   const startCamera = useCallback(async (facing: 'user' | 'environment' = facingMode) => {
@@ -633,6 +634,257 @@ export default function CameraFeed() {
     }
 
     /* ═══════════════════════════════════════════════════════
+       (e2) HAND TRACKING BOX — simulated 21-keypoint hand
+       ═══════════════════════════════════════════════════════ */
+    {
+      const handColor = '#8B6EE8';
+      const handAlpha = 0.6 + 0.2 * Math.sin(t * 1.8);
+      const hx = bx - 20 * scale + Math.sin(t * 0.6) * 3;
+      const hy = by + bh + 50 * (H / 480) + Math.cos(t * 0.5) * 2;
+      const hw = 90 * scale;
+      const hh = 100 * (H / 480);
+
+      drawCornerBrackets(ctx, hx, hy, hw, hh, 16 * scale, `rgba(139,110,232,${handAlpha})`, 1.8);
+
+      // label
+      const handLabelFs = Math.max(7, 8 * scale);
+      const handLabel = 'HAND TRACKING \u2014 21 pts';
+      ctx.font = `${handLabelFs}px "SF Mono", "Fira Code", monospace`;
+      const hlm = ctx.measureText(handLabel);
+      ctx.fillStyle = 'rgba(6,14,28,0.8)';
+      ctx.beginPath();
+      ctx.roundRect(hx, hy - handLabelFs - 8, hlm.width + 10, handLabelFs + 8, 3);
+      ctx.fill();
+      ctx.fillStyle = handColor;
+      ctx.fillText(handLabel, hx + 5, hy - 5);
+
+      // simulated keypoint dots (8 dots in a hand-like pattern)
+      const dotPositions = [
+        { dx: 0.5, dy: 0.15 },  // wrist centre
+        { dx: 0.3, dy: 0.35 },  // thumb base
+        { dx: 0.15, dy: 0.2 },  // thumb tip
+        { dx: 0.4, dy: 0.5 },   // index base
+        { dx: 0.42, dy: 0.7 },  // index tip
+        { dx: 0.55, dy: 0.5 },  // middle base
+        { dx: 0.57, dy: 0.72 }, // middle tip
+        { dx: 0.7, dy: 0.45 },  // ring/pinky
+      ];
+      dotPositions.forEach((dp) => {
+        const px = hx + dp.dx * hw + Math.sin(t * 2 + dp.dx * 5) * 1.5;
+        const py = hy + dp.dy * hh + Math.cos(t * 1.8 + dp.dy * 4) * 1.5;
+        ctx.fillStyle = `rgba(139,110,232,${0.6 + 0.3 * Math.sin(t * 3 + dp.dx)})`;
+        ctx.beginPath();
+        ctx.arc(px, py, 2.5 * scale, 0, Math.PI * 2);
+        ctx.fill();
+        // glow
+        ctx.fillStyle = 'rgba(139,110,232,0.2)';
+        ctx.beginPath();
+        ctx.arc(px, py, 5 * scale, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       (e3) SIGN / MAKATON DETECTION PANEL — right side
+       ═══════════════════════════════════════════════════════ */
+    {
+      // Determine detected sign based on state
+      type SignInfo = { sign: string; source: string; conf: number } | null;
+      const signCycleIndex = Math.floor(t / 4) % 3;
+
+      let signInfo: SignInfo = null;
+      if (state === 'calm' || state === 'engaged') {
+        const calmSigns = [
+          { sign: 'More', source: 'Makaton-like', conf: 0.92 },
+          { sign: 'Pointing', source: 'Personal sign', conf: 0.95 },
+          { sign: 'Hug / Comfort', source: 'Makaton-like', conf: 0.90 },
+        ];
+        signInfo = calmSigns[signCycleIndex % calmSigns.length];
+      } else if (state === 'uneasy' || state === 'confused') {
+        const uneasySigns = [
+          { sign: 'Help', source: 'Personal sign', conf: 0.85 },
+          { sign: 'Ears hurt / Too loud', source: 'Personal sign', conf: 0.78 },
+        ];
+        signInfo = uneasySigns[signCycleIndex % uneasySigns.length];
+      } else if (state === 'frustrated' || state === 'overloaded') {
+        const frustSigns = [
+          { sign: 'Stop / No more', source: 'Makaton-like', conf: 0.88 },
+          { sign: 'Ears hurt / Too loud', source: 'Personal sign', conf: 0.78 },
+        ];
+        signInfo = frustSigns[signCycleIndex % frustSigns.length];
+      } else if (state === 'dysregulated') {
+        signInfo = { sign: 'Upset / Distressed', source: 'Personal sign', conf: 0.70 };
+      }
+      // shutdown_risk: signInfo remains null (withdrawn — no sign detected)
+
+      if (signInfo) {
+        const spW = 170 * scale;
+        const spH = 110 * (H / 480);
+        const spX = W - spW - 12;
+        const spY = barH + 14;
+
+        // panel background
+        ctx.fillStyle = 'rgba(6,14,28,0.88)';
+        ctx.beginPath();
+        ctx.roundRect(spX, spY, spW, spH, 6);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(56,201,240,0.2)';
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.roundRect(spX, spY, spW, spH, 6);
+        ctx.stroke();
+
+        const spPad = 10 * scale;
+        let spCurY = spY + spPad;
+
+        // header
+        const headerFs = Math.max(7, 8 * scale);
+        ctx.font = `bold ${headerFs}px "SF Mono", "Fira Code", monospace`;
+        ctx.fillStyle = '#38C9F0';
+        ctx.fillText('SIGN DETECTION', spX + spPad, spCurY + headerFs);
+        spCurY += headerFs + 8;
+
+        // sign name — large
+        const signFs = Math.max(11, 13 * scale);
+        ctx.font = `bold ${signFs}px "SF Mono", "Fira Code", monospace`;
+        ctx.fillStyle = '#FFFFFF';
+        const signLabel = `Possible: "${signInfo.sign}"`;
+        ctx.fillText(signLabel, spX + spPad, spCurY + signFs);
+        spCurY += signFs + 6;
+
+        // source
+        const srcFs = Math.max(7, 8 * scale);
+        ctx.font = `${srcFs}px "SF Mono", "Fira Code", monospace`;
+        ctx.fillStyle = '#8B6EE8';
+        ctx.fillText(`Source: ${signInfo.source}`, spX + spPad, spCurY + srcFs);
+        spCurY += srcFs + 6;
+
+        // confidence bar
+        const barWidth = spW - spPad * 2;
+        const barHeight = 5 * (H / 480);
+        const confJitter = signInfo.conf + Math.sin(t * 0.7) * 0.04;
+        const confClamped = Math.min(Math.max(confJitter, 0), 1);
+
+        ctx.fillStyle = 'rgba(255,255,255,0.08)';
+        ctx.beginPath();
+        ctx.roundRect(spX + spPad, spCurY, barWidth, barHeight, 2);
+        ctx.fill();
+        ctx.fillStyle = '#8B6EE8';
+        ctx.beginPath();
+        ctx.roundRect(spX + spPad, spCurY, barWidth * confClamped, barHeight, 2);
+        ctx.fill();
+
+        ctx.font = `${srcFs}px "SF Mono", "Fira Code", monospace`;
+        ctx.fillStyle = '#C8D4E4';
+        ctx.fillText(`${Math.round(confClamped * 100)}%`, spX + spPad + barWidth + 4, spCurY + barHeight);
+        spCurY += barHeight + 6;
+
+        // dictionary note
+        const noteFs = Math.max(6, 7 * scale);
+        ctx.font = `${noteFs}px "SF Mono", "Fira Code", monospace`;
+        ctx.fillStyle = '#5A7A9B';
+        ctx.fillText("Matched from Leo's dictionary", spX + spPad, spCurY + noteFs);
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       (e4) COMMUNICATION MODE INDICATOR — top bar badge
+       ═══════════════════════════════════════════════════════ */
+    {
+      type CommMode = 'SIGN' | 'GESTURE' | 'VOCAL' | 'PECS';
+      const commColors: Record<CommMode, string> = {
+        SIGN: '#8B6EE8',
+        GESTURE: '#38C9F0',
+        VOCAL: '#F0C038',
+        PECS: '#00D9A6',
+      };
+
+      let commMode: CommMode = 'GESTURE'; // default
+      const audioIntensity = sensorReadings.audio.vocalIntensity;
+      if (state === 'calm' || state === 'engaged') {
+        // cycle between SIGN and PECS when calm
+        commMode = Math.floor(t / 6) % 2 === 0 ? 'SIGN' : 'PECS';
+      } else if (audioIntensity > 50) {
+        commMode = 'VOCAL';
+      } else if (state === 'uneasy' || state === 'confused') {
+        commMode = 'SIGN';
+      }
+
+      const commText = `COMM: ${commMode}`;
+      const commFs = Math.max(7, 8 * scale);
+      ctx.font = `bold ${commFs}px "SF Mono", "Fira Code", monospace`;
+      const commTW = ctx.measureText(commText).width;
+      const commBadgeW = commTW + 14;
+      const commBadgeH = commFs + 8;
+      // position to the right of the title, before the timestamp
+      const commBadgeX = 180 * scale;
+      const commBadgeY = (barH - commBadgeH) / 2;
+
+      ctx.fillStyle = 'rgba(6,14,28,0.9)';
+      ctx.beginPath();
+      ctx.roundRect(commBadgeX, commBadgeY, commBadgeW, commBadgeH, 3);
+      ctx.fill();
+      ctx.strokeStyle = commColors[commMode] + '66';
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.roundRect(commBadgeX, commBadgeY, commBadgeW, commBadgeH, 3);
+      ctx.stroke();
+
+      // dot
+      ctx.fillStyle = commColors[commMode];
+      ctx.beginPath();
+      ctx.arc(commBadgeX + 7, commBadgeY + commBadgeH / 2, 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = commColors[commMode];
+      ctx.fillText(commText, commBadgeX + 14, commBadgeY + commFs + 2);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       (e5) PECS CARD DETECTION — simulated, lower-right
+       ═══════════════════════════════════════════════════════ */
+    {
+      // Show for 5 sec (300 frames), hide for 3 sec (180 frames) — 8 sec cycle
+      const pecsCycle = frame % 480;
+      const pecsVisible = pecsCycle < 300 && (state === 'calm' || state === 'engaged');
+
+      if (pecsVisible) {
+        const pecsFs = Math.max(7, 8 * scale);
+        const pcW = 140 * scale;
+        const pcH = 50 * (H / 480);
+        const pcX = W - pcW - 14;
+        const pcY = H - pcH - 60 * (H / 480);
+
+        // detection box
+        drawCornerBrackets(ctx, pcX, pcY, pcW, pcH, 12 * scale, 'rgba(0,217,166,0.5)', 1.5);
+
+        // background label area
+        ctx.fillStyle = 'rgba(6,14,28,0.85)';
+        ctx.beginPath();
+        ctx.roundRect(pcX, pcY - (pecsFs + 8) * 2 - 4, pcW, (pecsFs + 8) * 2 + 4, 3);
+        ctx.fill();
+
+        // card icon (small coloured rectangle)
+        ctx.fillStyle = '#00D9A6';
+        ctx.beginPath();
+        ctx.roundRect(pcX + 5, pcY - (pecsFs + 8) * 2, 10 * scale, 12 * (H / 480), 2);
+        ctx.fill();
+        ctx.fillStyle = 'rgba(0,0,0,0.3)';
+        ctx.beginPath();
+        ctx.roundRect(pcX + 5 + 2 * scale, pcY - (pecsFs + 8) * 2 + 3 * (H / 480), 6 * scale, 2 * (H / 480), 1);
+        ctx.fill();
+
+        ctx.font = `bold ${pecsFs}px "SF Mono", "Fira Code", monospace`;
+        ctx.fillStyle = '#00D9A6';
+        ctx.fillText('PECS Card Detected', pcX + 5 + 14 * scale, pcY - (pecsFs + 8) - 2);
+
+        ctx.font = `${pecsFs}px "SF Mono", "Fira Code", monospace`;
+        ctx.fillStyle = '#C8D4E4';
+        ctx.fillText('Category: Food / Activity', pcX + 5, pcY - 4);
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════
        (b) MICRO-EXPRESSION TIMELINE BAR
        ═══════════════════════════════════════════════════════ */
     {
@@ -981,6 +1233,91 @@ export default function CameraFeed() {
                 ({Math.round(currentState.confidence * 100)}%)
               </span>
             </div>
+          </div>
+
+          {/* Sign / Makaton Detection card */}
+          <div className="mt-3 p-3 rounded-xl bg-[#0A1628] border border-[#1A3A5C]">
+            <p className="text-[10px] font-mono uppercase tracking-wider mb-1.5" style={{ color: '#5A7A9B' }}>
+              Sign / Makaton Detection
+            </p>
+            <div className="border-t border-[#1A3A5C] mb-2" />
+            {(() => {
+              const signCycleIdx = Math.floor(Date.now() / 4000) % 3;
+              type SignMeta = { name: string; type: string; conf: number };
+              let signMeta: SignMeta | null = null;
+              if (state === 'calm' || state === 'engaged') {
+                const opts: SignMeta[] = [
+                  { name: 'More', type: 'Makaton-like', conf: 0.92 },
+                  { name: 'Pointing', type: 'Personal', conf: 0.95 },
+                  { name: 'Hug / Comfort', type: 'Makaton-like', conf: 0.90 },
+                ];
+                signMeta = opts[signCycleIdx % opts.length];
+              } else if (state === 'uneasy' || state === 'confused') {
+                signMeta = { name: 'Help', type: 'Personal', conf: 0.85 };
+              } else if (state === 'frustrated' || state === 'overloaded') {
+                signMeta = { name: 'Stop / No more', type: 'Makaton-like', conf: 0.88 };
+              } else if (state === 'dysregulated') {
+                signMeta = { name: 'Upset / Distressed', type: 'Personal', conf: 0.70 };
+              }
+              const dictCount = gestureDictionary.length;
+              return signMeta ? (
+                <>
+                  <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-[10px] font-mono">
+                    <span style={{ color: '#5A7A9B' }}>Current</span>
+                    <span style={{ color: '#8B6EE8' }} className="font-semibold">{signMeta.name}</span>
+                    <span style={{ color: '#5A7A9B' }}>Type</span>
+                    <span style={{ color: '#C8D4E4' }}>{signMeta.type}</span>
+                  </div>
+                  <div className="mt-1.5 space-y-0.5">
+                    <div className="flex justify-between items-center text-[10px] font-mono">
+                      <span style={{ color: '#5A7A9B' }}>Confidence</span>
+                      <span style={{ color: '#C8D4E4' }}>{Math.round(signMeta.conf * 100)}%</span>
+                    </div>
+                    <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-700 ease-out"
+                        style={{ width: `${signMeta.conf * 100}%`, background: 'linear-gradient(90deg, #8B6EE888, #8B6EE8)' }}
+                      />
+                    </div>
+                  </div>
+                  <p className="text-[10px] font-mono mt-1.5" style={{ color: '#5A7A9B' }}>
+                    Dictionary matches: <span style={{ color: '#C8D4E4' }}>{dictCount} signs</span>
+                  </p>
+                </>
+              ) : (
+                <p className="text-[10px] font-mono" style={{ color: '#5A7A9B' }}>No sign detected (withdrawn)</p>
+              );
+            })()}
+          </div>
+
+          {/* Communication Channel card */}
+          <div className="mt-3 p-3 rounded-xl bg-[#0A1628] border border-[#1A3A5C]">
+            <p className="text-[10px] font-mono uppercase tracking-wider mb-1.5" style={{ color: '#5A7A9B' }}>
+              Communication Channel
+            </p>
+            <div className="border-t border-[#1A3A5C] mb-2" />
+            <p className="text-sm font-semibold font-mono" style={{ color: '#8B6EE8' }}>
+              {(state === 'calm' || state === 'engaged') ? 'Sign-supported' : sensorReadings.audio.vocalIntensity > 50 ? 'Vocal' : 'Gesture-based'}
+            </p>
+            <p className="text-[10px] font-mono mt-1.5 mb-1" style={{ color: '#5A7A9B' }}>Modes detected today:</p>
+            <ul className="space-y-0.5 text-[10px] font-mono">
+              <li className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: '#8B6EE8' }} />
+                <span style={{ color: '#C8D4E4' }}>Sign: 12 instances</span>
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: '#38C9F0' }} />
+                <span style={{ color: '#C8D4E4' }}>Gesture: 34 instances</span>
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: '#F0C038' }} />
+                <span style={{ color: '#C8D4E4' }}>Vocal: 8 instances</span>
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: '#00D9A6' }} />
+                <span style={{ color: '#C8D4E4' }}>PECS: 3 instances</span>
+              </li>
+            </ul>
           </div>
 
           {/* Posture card */}
