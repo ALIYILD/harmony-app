@@ -6,7 +6,8 @@ export function useSimulation() {
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const {
     setCurrentState, setSensorReadings, setIsSimulating,
-    setSimulationPhase, addStateToHistory, setActiveTab
+    setSimulationPhase, addStateToHistory, setActiveTab,
+    addToast, addEventLog
   } = useAppStore();
 
   const cleanup = useCallback(() => {
@@ -25,6 +26,7 @@ export function useSimulation() {
     // Phase 1: Early signs (3s) — uneasy
     timers.current.push(setTimeout(() => {
       setSimulationPhase(1);
+      addToast('Vocal tone shift detected — monitoring closely', 'warning');
       const state: StateEstimate = {
         primaryState: 'uneasy',
         confidence: 0.65,
@@ -47,6 +49,8 @@ export function useSimulation() {
     // Phase 2: Frustrated (9s)
     timers.current.push(setTimeout(() => {
       setSimulationPhase(2);
+      addToast('Stress threshold approaching — frustration building', 'danger');
+      addEventLog({ id: 'sim-e1', timestamp: Date.now(), type: 'frustration', trigger: 'After-school transition + loud environment', notes: 'Detected by audio + vision modalities' });
       const state: StateEstimate = {
         primaryState: 'frustrated',
         confidence: 0.74,
@@ -72,6 +76,8 @@ export function useSimulation() {
     timers.current.push(setTimeout(() => {
       setSimulationPhase(3);
       setActiveTab('copilot');
+      addToast('Sensory overload detected — guidance sent to your device', 'danger');
+      addEventLog({ id: 'sim-e2', timestamp: Date.now(), type: 'sensory_overload', trigger: 'Cumulative noise + routine deviation', intervention: 'Ear defenders + quiet space', notes: 'Auto-guided intervention triggered' });
       const state: StateEstimate = {
         primaryState: 'overloaded',
         confidence: 0.82,
@@ -94,6 +100,7 @@ export function useSimulation() {
     // Phase 4: De-escalating (28s)
     timers.current.push(setTimeout(() => {
       setSimulationPhase(4);
+      addToast('De-escalating — Leo is responding to intervention', 'info');
       const state: StateEstimate = {
         primaryState: 'frustrated',
         confidence: 0.60,
@@ -117,6 +124,8 @@ export function useSimulation() {
     timers.current.push(setTimeout(() => {
       setSimulationPhase(5);
       setActiveTab('monitor');
+      addToast('Resolved — Leo has returned to a calm state', 'success');
+      addEventLog({ id: 'sim-e3', timestamp: Date.now(), type: 'good_moment', trigger: 'Successful de-escalation', intervention: 'Weighted blanket + reduced demands', outcome: 'helped', notes: 'Crisis averted — 4 minute de-escalation' });
       const state: StateEstimate = {
         primaryState: 'calm',
         confidence: 0.80,
@@ -136,7 +145,7 @@ export function useSimulation() {
       });
       setIsSimulating(false);
     }, 40000));
-  }, [cleanup, setCurrentState, setSensorReadings, setIsSimulating, setSimulationPhase, addStateToHistory, setActiveTab]);
+  }, [cleanup, setCurrentState, setSensorReadings, setIsSimulating, setSimulationPhase, addStateToHistory, setActiveTab, addToast, addEventLog]);
 
   const reset = useCallback(() => {
     cleanup();

@@ -2,6 +2,12 @@ import { create } from 'zustand';
 import type { StateEstimate, SensorReading, EventLog, ChildProfile, TabId, Suggestion } from '../types';
 import { generateMockChildProfile } from '../data/mockData';
 
+interface Toast {
+  id: string;
+  message: string;
+  type: 'info' | 'warning' | 'danger' | 'success';
+}
+
 interface AppState {
   activeTab: TabId;
   setActiveTab: (tab: TabId) => void;
@@ -32,6 +38,10 @@ interface AppState {
 
   monitoringActive: boolean;
   setMonitoringActive: (v: boolean) => void;
+
+  toasts: Toast[];
+  addToast: (message: string, type?: 'info' | 'warning' | 'danger' | 'success') => void;
+  removeToast: (id: string) => void;
 }
 
 const defaultState: StateEstimate = {
@@ -81,4 +91,12 @@ export const useAppStore = create<AppState>((set) => ({
 
   monitoringActive: true,
   setMonitoringActive: (v) => set({ monitoringActive: v }),
+
+  toasts: [],
+  addToast: (message, type = 'info') => set((s) => ({
+    toasts: [...s.toasts, { id: Date.now().toString(), message, type }]
+  })),
+  removeToast: (id) => set((s) => ({
+    toasts: s.toasts.filter(t => t.id !== id)
+  })),
 }));
