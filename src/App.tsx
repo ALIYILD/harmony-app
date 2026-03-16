@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAppStore } from './store/useAppStore';
 import { useSimulation } from './hooks/useSimulation';
 import StateMonitor from './components/StateMonitor';
@@ -9,21 +9,63 @@ import ChildProfileView from './components/ChildProfileView';
 import GestureDictionary from './components/GestureDictionary';
 import type { TabId } from './types';
 
-const tabs: { id: TabId; label: string; icon: string }[] = [
-  { id: 'monitor', label: 'Monitor', icon: '\u{1F4E1}' },
-  { id: 'copilot', label: 'Co-Pilot', icon: '\u{1F9ED}' },
-  { id: 'log', label: 'Log', icon: '\u{1F4DD}' },
-  { id: 'summary', label: 'Summary', icon: '\u{1F4CA}' },
-  { id: 'profile', label: 'Profile', icon: '\u{1F464}' },
-  { id: 'gestures', label: 'Signs', icon: '\u{1F91F}' },
+const tabs: { id: TabId; label: string; icon: string; subtitle: string }[] = [
+  { id: 'home', label: 'Home', icon: '🏠', subtitle: 'Real-time monitoring' },
+  { id: 'guide', label: 'Guide', icon: '💡', subtitle: 'What to do now' },
+  { id: 'log', label: 'Log', icon: '✏️', subtitle: 'Record events' },
+  { id: 'insights', label: 'Insights', icon: '📊', subtitle: 'Patterns & trends' },
+  { id: 'leo', label: 'Leo', icon: '💙', subtitle: 'Profile & signs' },
 ];
 
 const toastConfig = {
-  info: { border: 'border-[#38C9F0]', icon: '\u{1F4A1}' },
-  warning: { border: 'border-[#F0C038]', icon: '\u26A0\uFE0F' },
-  danger: { border: 'border-[#FF6B6B]', icon: '\u{1F6A8}' },
-  success: { border: 'border-[#00D9A6]', icon: '\u2713' },
+  info: { border: 'border-[#38C9F0]', icon: '💡' },
+  warning: { border: 'border-[#F0C038]', icon: '⚠️' },
+  danger: { border: 'border-[#FF6B6B]', icon: '🚨' },
+  success: { border: 'border-[#00D9A6]', icon: '✓' },
 };
+
+const stateColors: Record<string, { emoji: string; color: string }> = {
+  calm: { emoji: '🟢', color: 'bg-green-500/15 text-green-400' },
+  engaged: { emoji: '🟢', color: 'bg-green-500/15 text-green-400' },
+  uneasy: { emoji: '🟡', color: 'bg-yellow-500/15 text-yellow-400' },
+  confused: { emoji: '🟡', color: 'bg-yellow-500/15 text-yellow-400' },
+  frustrated: { emoji: '🟠', color: 'bg-orange-500/15 text-orange-400' },
+  overloaded: { emoji: '🔴', color: 'bg-red-500/15 text-red-400' },
+  dysregulated: { emoji: '🔴', color: 'bg-red-500/15 text-red-400' },
+  shutdown_risk: { emoji: '🔴', color: 'bg-red-500/15 text-red-400' },
+  sensory_seeking: { emoji: '🟡', color: 'bg-yellow-500/15 text-yellow-400' },
+};
+
+function LeoTab() {
+  const [subTab, setSubTab] = useState<'profile' | 'signs'>('profile');
+  return (
+    <div>
+      <div className="flex gap-2 px-4 pt-4 pb-2">
+        <button
+          onClick={() => setSubTab('profile')}
+          className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+            subTab === 'profile'
+              ? 'bg-[#38C9F0]/15 text-[#38C9F0] border border-[#38C9F0]/30'
+              : 'bg-[#132D46] text-[#5A7A9B] hover:bg-[#1A3A5C] hover:text-[#C8D4E4]'
+          }`}
+        >
+          About Leo
+        </button>
+        <button
+          onClick={() => setSubTab('signs')}
+          className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+            subTab === 'signs'
+              ? 'bg-[#38C9F0]/15 text-[#38C9F0] border border-[#38C9F0]/30'
+              : 'bg-[#132D46] text-[#5A7A9B] hover:bg-[#1A3A5C] hover:text-[#C8D4E4]'
+          }`}
+        >
+          Leo's Signs
+        </button>
+      </div>
+      {subTab === 'profile' ? <ChildProfileView /> : <GestureDictionary />}
+    </div>
+  );
+}
 
 function ToastContainer() {
   const { toasts, removeToast } = useAppStore();
@@ -33,7 +75,7 @@ function ToastContainer() {
     const latest = toasts[toasts.length - 1];
     const timer = setTimeout(() => {
       removeToast(latest.id);
-    }, 4000);
+    }, 5000);
     return () => clearTimeout(timer);
   }, [toasts, removeToast]);
 
@@ -44,15 +86,15 @@ function ToastContainer() {
         return (
           <div
             key={toast.id}
-            className={`bg-[#0D1B2A] border border-[#1A3A5C] ${cfg.border} border-l-4 rounded-xl p-3 shadow-2xl flex items-start gap-2 animate-toast-in w-full`}
+            className={`bg-[#0D1B2A] border border-[#1A3A5C] ${cfg.border} border-l-4 rounded-xl p-4 shadow-2xl flex items-start gap-3 animate-toast-in w-full`}
           >
-            <span className="text-lg shrink-0">{cfg.icon}</span>
-            <p className="text-white text-sm font-medium leading-tight flex-1">{toast.message}</p>
+            <span className="text-xl shrink-0">{cfg.icon}</span>
+            <p className="text-white text-base font-medium leading-snug flex-1">{toast.message}</p>
             <button
               onClick={() => removeToast(toast.id)}
-              className="text-[#5A7A9B] hover:text-white text-xs ml-2 shrink-0"
+              className="text-[#5A7A9B] hover:text-white text-sm ml-2 shrink-0"
             >
-              x
+              ✕
             </button>
           </div>
         );
@@ -76,17 +118,21 @@ const LogoSvg = () => (
 );
 
 export default function App() {
-  const { activeTab, setActiveTab, isSimulating, simulationPhase } = useAppStore();
+  const { activeTab, setActiveTab, isSimulating, simulationPhase, currentState } = useAppStore();
   const { run, reset } = useSimulation();
+  const [demoExpanded, setDemoExpanded] = useState(false);
+
+  const stateName = currentState.primaryState.replace('_', ' ');
+  const stateDisplay = stateName.charAt(0).toUpperCase() + stateName.slice(1);
+  const stateInfo = stateColors[currentState.primaryState] || stateColors.calm;
 
   const renderScreen = () => {
     switch (activeTab) {
-      case 'monitor': return <StateMonitor />;
-      case 'copilot': return <CaregiverCoPilot />;
+      case 'home': return <StateMonitor />;
+      case 'guide': return <CaregiverCoPilot />;
       case 'log': return <EventLogger />;
-      case 'summary': return <DailySummary />;
-      case 'profile': return <ChildProfileView />;
-      case 'gestures': return <GestureDictionary />;
+      case 'insights': return <DailySummary />;
+      case 'leo': return <LeoTab />;
     }
   };
 
@@ -94,9 +140,9 @@ export default function App() {
     'Ready',
     'Phase 1: Early signs detected',
     'Phase 2: Frustration building',
-    'Phase 3: Sensory overload \u2014 intervention sent',
+    'Phase 3: Sensory overload — intervention sent',
     'Phase 4: De-escalating with support',
-    'Phase 5: Resolved \u2014 calm restored',
+    'Phase 5: Resolved — calm restored',
   ];
 
   return (
@@ -114,6 +160,11 @@ export default function App() {
             <h1 className="text-sm font-bold text-white leading-none lg:text-lg">HarmonyAlert</h1>
             <p className="text-[10px] text-[#5A7A9B] font-semibold tracking-wider uppercase lg:text-xs">Real-time coaching</p>
           </div>
+          {/* Mobile: child state badge */}
+          <div className={`lg:hidden ml-2 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${stateInfo.color}`}>
+            <span>Leo: {stateDisplay}</span>
+            <span>{stateInfo.emoji}</span>
+          </div>
         </div>
         <div className="flex items-center gap-3">
           <span className="hidden lg:inline text-[#5A7A9B] text-sm italic">Connection, not correction.</span>
@@ -125,32 +176,49 @@ export default function App() {
         </div>
       </header>
 
-      {/* Mobile Simulation Control Bar */}
-      <div className="lg:hidden sticky top-[52px] z-40 bg-[#0D1B2A]/95 backdrop-blur border-b border-[#1A3A5C] px-4 py-2 flex items-center gap-2">
-        <button
-          onClick={run}
-          disabled={isSimulating}
-          className="px-4 py-2 bg-gradient-to-r from-[#38C9F0] to-[#8B6EE8] text-white text-xs font-bold rounded-xl disabled:opacity-40 transition-all hover:shadow-lg hover:shadow-[#38C9F0]/20 active:scale-95"
-        >
-          {isSimulating ? '\u23F3 Simulating...' : '\u25B6 Run Demo Scenario'}
-        </button>
-        <button
-          onClick={reset}
-          className="px-3 py-2 bg-[#132D46] text-[#5A7A9B] text-xs font-semibold rounded-xl hover:bg-[#1A3A5C] hover:text-[#C8D4E4] transition-all active:scale-95"
-        >
-          \u21BA Reset
-        </button>
-        {isSimulating && (
-          <div className="flex-1 flex items-center gap-2">
-            <div className="flex-1 h-1.5 bg-[#132D46] rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-[#38C9F0] to-[#8B6EE8] rounded-full transition-all duration-1000"
-                style={{ width: `${(simulationPhase / 5) * 100}%` }}
-              />
-            </div>
-            <span className="text-[10px] font-medium text-[#5A7A9B] whitespace-nowrap">
-              {phaseLabels[simulationPhase]}
-            </span>
+      {/* Mobile Simulation Control Bar — collapsible */}
+      <div className="lg:hidden sticky top-[52px] z-40 bg-[#0D1B2A]/95 backdrop-blur border-b border-[#1A3A5C] px-4 py-2">
+        {!demoExpanded ? (
+          <button
+            onClick={() => setDemoExpanded(true)}
+            className="px-3 py-1.5 bg-[#132D46] text-[#5A7A9B] text-xs font-semibold rounded-full hover:bg-[#1A3A5C] hover:text-[#C8D4E4] transition-all"
+          >
+            🎮 Demo
+          </button>
+        ) : (
+          <div className="flex items-center gap-2">
+            <button
+              onClick={run}
+              disabled={isSimulating}
+              className="px-4 py-2 bg-gradient-to-r from-[#38C9F0] to-[#8B6EE8] text-white text-xs font-bold rounded-xl disabled:opacity-40 transition-all hover:shadow-lg hover:shadow-[#38C9F0]/20 active:scale-95"
+            >
+              {isSimulating ? '⏳ Simulating...' : '▶ Run Demo'}
+            </button>
+            <button
+              onClick={reset}
+              className="px-3 py-2 bg-[#132D46] text-[#5A7A9B] text-xs font-semibold rounded-xl hover:bg-[#1A3A5C] hover:text-[#C8D4E4] transition-all active:scale-95"
+            >
+              ↺ Reset
+            </button>
+            <button
+              onClick={() => setDemoExpanded(false)}
+              className="ml-auto px-2 py-1 text-[#5A7A9B] text-xs hover:text-white transition-all"
+            >
+              ✕
+            </button>
+            {isSimulating && (
+              <div className="flex-1 flex items-center gap-2">
+                <div className="flex-1 h-1.5 bg-[#132D46] rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-[#38C9F0] to-[#8B6EE8] rounded-full transition-all duration-1000"
+                    style={{ width: `${(simulationPhase / 5) * 100}%` }}
+                  />
+                </div>
+                <span className="text-[10px] font-medium text-[#5A7A9B] whitespace-nowrap">
+                  {phaseLabels[simulationPhase]}
+                </span>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -158,7 +226,7 @@ export default function App() {
       {/* Desktop: sidebar + content | Mobile: content only */}
       <div className="flex flex-1 overflow-hidden">
         {/* Desktop Sidebar */}
-        <aside className="hidden lg:flex lg:flex-col w-[220px] shrink-0 bg-[#0D1B2A] border-r border-[#1A3A5C] overflow-y-auto">
+        <aside className="hidden lg:flex lg:flex-col w-[240px] shrink-0 bg-[#0D1B2A] border-r border-[#1A3A5C] overflow-y-auto">
           {/* Sidebar logo */}
           <div className="px-4 pt-5 pb-4 flex items-center gap-2 border-b border-[#1A3A5C]">
             <LogoSvg />
@@ -174,20 +242,24 @@ export default function App() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-left text-sm font-semibold transition-all ${
+                className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-left transition-all ${
                   activeTab === tab.id
                     ? 'bg-[#38C9F0]/10 text-[#38C9F0] border-l-[3px] border-[#38C9F0]'
                     : 'text-[#5A7A9B] hover:bg-[#132D46] hover:text-[#C8D4E4]'
                 }`}
               >
-                <span className="text-lg">{tab.icon}</span>
-                <span>{tab.label}</span>
+                <span className="text-xl">{tab.icon}</span>
+                <div className="flex flex-col">
+                  <span className="text-sm font-semibold">{tab.label}</span>
+                  <span className="text-[10px] text-[#5A7A9B] font-normal leading-tight">{tab.subtitle}</span>
+                </div>
               </button>
             ))}
           </nav>
 
           {/* Sim controls at bottom */}
           <div className="p-3 border-t border-[#1A3A5C] flex flex-col gap-2">
+            <p className="text-[10px] font-semibold text-[#5A7A9B] uppercase tracking-wider text-center">Demo Mode</p>
             {isSimulating && (
               <div className="mb-2">
                 <div className="h-1.5 bg-[#132D46] rounded-full overflow-hidden mb-1">
@@ -206,20 +278,20 @@ export default function App() {
               disabled={isSimulating}
               className="w-full px-4 py-2.5 bg-gradient-to-r from-[#38C9F0] to-[#8B6EE8] text-white text-sm font-bold rounded-xl disabled:opacity-40 transition-all hover:shadow-lg hover:shadow-[#38C9F0]/20 active:scale-95"
             >
-              {isSimulating ? '\u23F3 Simulating...' : '\u25B6 Run Demo'}
+              {isSimulating ? '⏳ Simulating...' : '▶ Run Demo'}
             </button>
             <button
               onClick={reset}
               className="w-full px-3 py-2 bg-[#132D46] text-[#5A7A9B] text-sm font-semibold rounded-xl hover:bg-[#1A3A5C] hover:text-[#C8D4E4] transition-all active:scale-95"
             >
-              \u21BA Reset
+              ↺ Reset
             </button>
           </div>
         </aside>
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto pb-20 lg:pb-4">
-          <div className="lg:max-w-3xl lg:mx-auto">
+          <div className="lg:max-w-6xl lg:mx-auto">
             <div key={activeTab} className="animate-fade-in">
               {renderScreen()}
             </div>
@@ -228,18 +300,18 @@ export default function App() {
       </div>
 
       {/* Mobile Bottom Tab Bar */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0D1B2A]/95 backdrop-blur-lg border-t border-[#1A3A5C] px-2 py-1.5 flex justify-around">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0D1B2A]/95 backdrop-blur-lg border-t border-[#1A3A5C] px-2 py-1 flex justify-around">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all ${
+            className={`flex flex-col items-center justify-center gap-0.5 px-3 min-h-[48px] rounded-xl transition-all ${
               activeTab === tab.id
-                ? 'text-[#38C9F0] bg-[#38C9F0]/10'
+                ? 'text-[#38C9F0] border-t-2 border-[#38C9F0] bg-[#38C9F0]/10'
                 : 'text-[#5A7A9B]'
             }`}
           >
-            <span className="text-lg">{tab.icon}</span>
+            <span className="text-xl">{tab.icon}</span>
             <span className="text-[10px] font-semibold">{tab.label}</span>
           </button>
         ))}

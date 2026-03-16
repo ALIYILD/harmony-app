@@ -69,7 +69,7 @@ const defaultSensors: SensorReading = {
 };
 
 export const useAppStore = create<AppState>((set) => ({
-  activeTab: 'monitor',
+  activeTab: 'home',
   setActiveTab: (tab) => set({ activeTab: tab }),
 
   currentState: defaultState,

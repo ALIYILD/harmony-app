@@ -119,7 +119,7 @@ export interface DailySummary {
   interventionSuccess: number;
 }
 
-export type TabId = 'monitor' | 'copilot' | 'log' | 'summary' | 'profile' | 'gestures';
+export type TabId = 'home' | 'guide' | 'log' | 'insights' | 'leo';
 
 export interface GestureEntry {
   id: string;

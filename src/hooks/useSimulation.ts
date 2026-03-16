@@ -19,7 +19,7 @@ export function useSimulation() {
     cleanup();
     setIsSimulating(true);
     setSimulationPhase(0);
-    setActiveTab('monitor');
+    setActiveTab('home');
 
     // Phase 0: Calm baseline (already default)
 
@@ -75,7 +75,7 @@ export function useSimulation() {
     // Phase 3: Overloaded — switch to copilot (16s)
     timers.current.push(setTimeout(() => {
       setSimulationPhase(3);
-      setActiveTab('copilot');
+      setActiveTab('guide');
       addToast('Sensory overload detected — guidance sent to your device', 'danger');
       addEventLog({ id: 'sim-e2', timestamp: Date.now(), type: 'sensory_overload', trigger: 'Cumulative noise + routine deviation', intervention: 'Ear defenders + quiet space', notes: 'Auto-guided intervention triggered' });
       const state: StateEstimate = {
@@ -123,7 +123,7 @@ export function useSimulation() {
     // Phase 5: Calm — resolved (40s), switch to monitor
     timers.current.push(setTimeout(() => {
       setSimulationPhase(5);
-      setActiveTab('monitor');
+      setActiveTab('home');
       addToast('Resolved — Leo has returned to a calm state', 'success');
       addEventLog({ id: 'sim-e3', timestamp: Date.now(), type: 'good_moment', trigger: 'Successful de-escalation', intervention: 'Weighted blanket + reduced demands', outcome: 'helped', notes: 'Crisis averted — 4 minute de-escalation' });
       const state: StateEstimate = {
