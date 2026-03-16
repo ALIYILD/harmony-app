@@ -1,9 +1,9 @@
 import { useCallback, useRef } from 'react';
 import { useAppStore } from '../store/useAppStore';
-import type { StateEstimate, SensorReading } from '../types';
+import type { StateEstimate } from '../types';
 
 export function useSimulation() {
-  const timers = useRef<NodeJS.Timeout[]>([]);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const {
     setCurrentState, setSensorReadings, setIsSimulating,
     setSimulationPhase, addStateToHistory, setActiveTab

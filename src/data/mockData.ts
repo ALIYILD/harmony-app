@@ -44,7 +44,7 @@ export function generateMockChildProfile(): ChildProfile {
   };
 }
 
-export function getSuggestionsForState(state: string, confidence: number): Suggestion[] {
+export function getSuggestionsForState(state: string, _confidence?: number): Suggestion[] {
   const suggestions: Record<string, Suggestion[]> = {
     calm: [
       { id: 's1', type: 'communication', text: 'Good time for gentle interaction', detail: 'Leo is regulated — this is a good window for brief social engagement or offering choices', icon: '💬', priority: 1 },

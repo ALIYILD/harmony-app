@@ -121,7 +121,7 @@ function ModalityBars({ contributions }: { contributions: { audio: number; visio
 
 // --- Suggestion Card ---
 
-function SuggestionCard({ suggestion, index }: { suggestion: Suggestion; index: number }) {
+function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {
   const badge = TYPE_BADGE[suggestion.type];
   const isAvoid = suggestion.type === 'avoid';
 
@@ -249,8 +249,8 @@ export default function CaregiverCoPilot() {
         {remainingSuggestions.length > 0 && (
           <div className="space-y-3">
             <h3 className="text-xs font-bold text-gray-400 tracking-wider uppercase px-1">Suggestions</h3>
-            {remainingSuggestions.map((s, i) => (
-              <SuggestionCard key={s.id} suggestion={s} index={i} />
+            {remainingSuggestions.map((s) => (
+              <SuggestionCard key={s.id} suggestion={s} />
             ))}
           </div>
         )}

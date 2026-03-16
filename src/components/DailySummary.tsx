@@ -121,7 +121,7 @@ export default function DailySummary() {
                 ))}
               </Pie>
               <Tooltip
-                formatter={(value: number, name: string) => [`${value}%`, name]}
+                formatter={(value: unknown, name: unknown) => [`${value}%`, String(name)]}
                 contentStyle={{ borderRadius: '12px', fontSize: '12px' }}
               />
             </PieChart>
@@ -157,7 +157,7 @@ export default function DailySummary() {
               <YAxis tick={{ fontSize: 10 }} domain={[0, 100]} />
               <Tooltip
                 contentStyle={{ borderRadius: '12px', fontSize: '12px' }}
-                formatter={(value: number) => [`${value}`, 'Stress Level']}
+                formatter={(value: unknown) => [`${value}`, 'Stress Level']}
               />
               <Area
                 type="monotone"
